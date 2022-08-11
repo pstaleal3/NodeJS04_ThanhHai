@@ -1,0 +1,31 @@
+extends ./../../index.pug
+block content
+  .row
+  .col-md-6
+    .card.card-primary
+      .card-header
+        h3.card-title Quick Example
+      // /.card-header
+      // form start
+      form
+        .card-body
+          .form-group
+            label(for='exampleInputEmail1') Email address
+            input#exampleInputEmail1.form-control(type='email' placeholder='Enter email')
+          .form-group
+            label(for='exampleInputPassword1') Password
+            input#exampleInputPassword1.form-control(type='password' placeholder='Password')
+          .form-group
+            label(for='exampleInputFile') File input
+            .input-group
+              .custom-file
+                input#exampleInputFile.custom-file-input(type='file')
+                label.custom-file-label(for='exampleInputFile') Choose file
+              .input-group-append
+                span.input-group-text Upload
+          .form-check
+            input#exampleCheck1.form-check-input(type='checkbox')
+            label.form-check-label(for='exampleCheck1') Check me out
+        // /.card-body
+        .card-footer
+          button.btn.btn-primary(type='submit') Submit
