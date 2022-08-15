@@ -3,8 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+var mongoose = require('mongoose');
 var configSystem = require('./configs/system');
+const username = "localhost";
+const password = "haidepjai";
+const cluster = "cluster0.9o21bec";
+const dbname = "db";
+mongoose.connect(
+  `mongodb+srv://${username}:${password}@${cluster}.mongodb.net/${dbname}?retryWrites=true&w=majority`)
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error: "));
+db.once("open", function () {
+});
 var app = express();
 
 // view engine setup
