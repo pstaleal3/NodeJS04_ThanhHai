@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    
     var ckbAll = $(".cbAll");
     var fmAdmin = $("#zt-form");
 
@@ -37,11 +38,12 @@ $(document).ready(function () {
         }
     });
     
-    // CONFIRM DELETE
-    $('a.btn-delete').on('click', () => {
-        if (!confirm("Are you sure you want to delete this item?")) return false;
+    //CONFIRM DELETE
+    $('a.btn-delete').on('click', (e) => {
+        // if (!confirm("Are you sure you want to delete this item?")) return false;
+        let url = $(e.currentTarget).data('url');
+        $('#exampleModal .modal-footer a').attr('href',url);
     });
-
     //active menu function
     function activeMenu() {
         let pathname = window.location.pathname;

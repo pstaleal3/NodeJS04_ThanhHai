@@ -16,6 +16,7 @@ const pathConfig = require('./path');
 global.__base           = __dirname + '/';
 global.__path_app       = __base + pathConfig.folder_app + '/';
 global.__path_configs   = __path_app + pathConfig.folder_configs + '/';
+global.__path_models     = __path_app + pathConfig.folder_models + '/';
 global.__path_helpers   = __path_app + pathConfig.folder_helpers + '/';
 global.__path_routers   = __path_app + pathConfig.folder_routers + '/';
 global.__path_schemas   = __path_app + pathConfig.folder_schemas + '/';
@@ -41,14 +42,6 @@ app.use(flash(app, {
    viewName: __path_views + 'elements/notify',
  }));
  
-app.use(validator({
-  customValidators: {
-    isNotEqual: (value1, value2) => {
-      return value1!==value2;
-    }
-  }
-}));
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

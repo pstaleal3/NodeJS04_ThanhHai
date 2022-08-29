@@ -8,7 +8,7 @@ const ItemsModel 	= require(__path_schemas + 'items');
 const ValidateItems	= require(__path_validates + 'items');
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
-
+const Model 		= require(__path_models + 'items');
 const linkIndex		 = '/' + systemConfig.prefixAdmin + '/items/';
 const pageTitleIndex = 'Item Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
@@ -36,9 +36,19 @@ router.get('(/status/:status)?', async (req, res, next) => {
 		pagination.totalItems = data;
 	});
 	
+	// Model.getListItems(objWhere,pagination).then( (items) => {
+	// 	res.render(`${folderView}list`, { 
+	// 		pageTitle: pageTitleIndex,
+	// 		items,
+	// 		statusFilter,
+	// 		pagination,
+	// 		currentStatus,
+	// 		keyword
+	// 	});
+	// });
 	ItemsModel
 		.find(objWhere)
-		.sort({ordering: 'asc'})
+		.sort({age: 'desc'})
 		.skip((pagination.currentPage-1) * pagination.totalItemsPerPage)
 		.limit(pagination.totalItemsPerPage)
 		.then( (items) => {
@@ -125,11 +135,11 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 // SAVE = ADD EDIT
 router.post('/save', (req, res, next) => {
 	req.body = JSON.parse(JSON.stringify(req.body));
-	ValidateItems.validator(req);
+	// ValidateItems.validator(req);
 
 	let item = Object.assign(req.body);
-	let errors = req.validationErrors();
-
+	// let errors = req.validationErrors();
+	let errors = null;
 	if(typeof item !== "undefined" && item.id !== "" ){	// edit
 		if(errors) { 
 			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors});
@@ -147,7 +157,7 @@ router.post('/save', (req, res, next) => {
 		if(errors) { 
 			res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors});
 		}else {
-			new ItemsModel(item).save().then(()=> {
+			Model.saveItems(item).then(()=> {
 				req.flash('success', notify.ADD_SUCCESS, false);
 				res.redirect(linkIndex);
 			})
