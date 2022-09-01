@@ -11,7 +11,7 @@ const expressLayouts = require('express-ejs-layouts');
 const mongoose = require('mongoose');
 
 const pathConfig = require('./path');
-// test
+
 // Define Path
 global.__base           = __dirname + '/';
 global.__path_app       = __base + pathConfig.folder_app + '/';
