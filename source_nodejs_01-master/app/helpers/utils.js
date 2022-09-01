@@ -22,8 +22,18 @@ let createFilterStatus =  async (currentStatus,collection) => {
 const firstLetterUppercase = (string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }
+const countCollection = async (arrKey, collectionModel) => {
+  for (let i = 0; i < arrKey.length; i++) {
+		let key = arrKey[i];
+		await collectionModel[key].count({}).then( (data) => {
+			collectionModel[key] = data;
+		});
+	}
+	return collectionModel;
+}
 
 module.exports = {
     createFilterStatus: createFilterStatus,
-		firstLetterUppercase
+		firstLetterUppercase,
+		countCollection
 }

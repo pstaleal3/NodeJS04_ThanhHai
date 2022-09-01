@@ -1,23 +1,26 @@
 <%  
     let arrBox = [
-        {name: 'Items', icon: 'ion-ios-people', link: `${systemConfig.prefixAdmin}/items`, total: countItems}
+        {name: 'Items', icon: 'ion-connection-bars', link: `${systemConfig.prefixAdmin}/items`, background: 'bg-danger'},
+        {name: 'Sliders', icon: 'ion-images', link: `${systemConfig.prefixAdmin}/sliders`, background: 'bg-success'},
+        {name: 'Users', icon: 'ion-ios-people', link: `${systemConfig.prefixAdmin}/users`, background: 'bg-primary'},
     ];
 
-    let xhtmlBox = '';
-    arrBox.forEach(box => {
+    let xhtmlBox = '<div class="row">';
+    arrBox.forEach((value, index) => {
         xhtmlBox += `<div class="col-lg-3 col-6">
-                        <div class="small-box bg-info">
+                        <div class="small-box ${value.background}">
                             <div class="inner">
-                                <h3>${box.total}</h3>
-                                <p>${box.name}</p>
+                                <h3>${count[value.name]}</h3>
+                                <p>${value.name}</p>
                             </div>
                             <div class="icon text-white">
-                                <i class="ion ion-ios-people"></i>
+                                <i class="ion ${value.icon}"></i>
                             </div>
-                            <a href="${box.link}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                            <a href="${value.link}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>`;
-    });   
+    });
+    xhtmlBox += '</div>';   
 %>
 
 <%- xhtmlBox %>
