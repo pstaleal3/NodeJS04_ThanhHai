@@ -2,25 +2,28 @@ var express = require('express');
 var router 	= express.Router();
 const util = require('util');
 const { body, validationResult } = require('express-validator');
+
+const Collection = 'sliders';
 const systemConfig  = require(__path_configs + 'system');
 const notify  		= require(__path_configs + 'notify');
-const SlidersModel 	= require(__path_schemas + 'sliders');
-const ValidateSliders	= require(__path_validates + 'sliders');
+const Model 		= require(__path_models + Collection);
+const SlidersModel 	= require(__path_schemas + Collection);
+// const ValidateSliders	= require(__path_validates + 'sliders');
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 
-const linkIndex		 = '/' + systemConfig.prefixAdmin + '/sliders/';
-const pageTitleIndex = 'Sliders Management';
+const linkIndex		 = '/' + systemConfig.prefixAdmin + `/${Collection}/`;
+const pageTitleIndex = Collection + ' Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
-const folderView	 = __path_views + 'pages/sliders/';
+const folderView	 = __path_views + `pages/${Collection}/`;
 
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	let objWhere	 = {};
 	let keyword		 = ParamsHelpers.getParam(req.query, 'keyword', '');
 	let currentStatus= ParamsHelpers.getParam(req.params, 'status', 'all'); 
-	let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus,'sliders');
+	let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus,Collection);
 
 	let pagination 	 = {
 		totalItems		 : 1,
@@ -31,16 +34,10 @@ router.get('(/status/:status)?', async (req, res, next) => {
 
 	if(currentStatus !== 'all') objWhere.status = currentStatus;
 	if(keyword !== '') objWhere.name = new RegExp(keyword, 'i');
+	pagination.totalItems = await Model.countRow(objWhere);
 
-	await SlidersModel.count(objWhere).then( (data) => {
-		pagination.totalItems = data;
-	});
-	
-	SlidersModel
-		.find(objWhere)
-		.sort({ordering: 'asc'})
-		.skip((pagination.currentPage-1) * pagination.totalItemsPerPage)
-		.limit(pagination.totalItemsPerPage)
+	Model
+		.getList(objWhere,pagination)
 		.then( (items) => {
 			res.render(`${folderView}list`, { 
 				pageTitle: pageTitleIndex,
@@ -52,30 +49,12 @@ router.get('(/status/:status)?', async (req, res, next) => {
 			});
 		});
 });
-
-// Change status
-router.get('/change-status/:id/:status', (req, res, next) => {
-	let currentStatus	= ParamsHelpers.getParam(req.params, 'status', 'active'); 
-	let id				= ParamsHelpers.getParam(req.params, 'id', ''); 
-	let status			= (currentStatus === "active") ? "inactive" : "active";
-	// SlidersModel.updateOne({_id: id}, {status: status}, (err, result) => {
-	// 	req.flash('success', notify.CHANGE_STATUS_SUCCESS, false);
-	// 	res.redirect(linkIndex);
-	// });
-});
-
-// Change status
+// ajax
 router.post('/ajax', (req, res, next) => {
 	let {id, field, value} = req.body;
-	// status = status == 'active' ? 'inactive' : 'active';
 	SlidersModel.updateOne({_id: id}, {[field]: value}, (err, result) => {});
 	res.send('success');
 });
-// router.post('/ajax/ordering', (req, res, next) => {
-// 	let {id, value} = req.body;
-// 	SlidersModel.updateOne({_id: id}, {ordering: value}, (err, result) => {});
-// 	res.send('success');
-// });
 // Change status - Multi
 router.post('/change-status/:status', (req, res, next) => {
 	let currentStatus	= ParamsHelpers.getParam(req.params, 'status', 'active'); 
@@ -142,10 +121,14 @@ router.post('/save',
 
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
+		let errorsMsg = {};
+		errors.errors.forEach(value => {
+			errorsMsg[value.param] = value.msg
+		});
 		res.render(`${folderView}form`, { 
 			pageTitle: pageTitleEdit, 
 			item: req.body,
-			errors: errors.errors
+			errors: errorsMsg
 		});
 		return;
 	} 
