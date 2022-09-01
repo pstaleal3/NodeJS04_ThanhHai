@@ -19,6 +19,11 @@ let createFilterStatus =  async (currentStatus,collection) => {
     return statusFilter;
 }
 
+const firstLetterUppercase = (string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 module.exports = {
-    createFilterStatus: createFilterStatus
+    createFilterStatus: createFilterStatus,
+		firstLetterUppercase
 }

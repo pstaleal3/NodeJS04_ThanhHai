@@ -7,7 +7,8 @@ module.exports = {
     DELETE_MULTI_SUCCESS: 'Có %d phần tử được xóa thành công',
     ADD_SUCCESS: 'Thêm mới phần tử thành công',
     EDIT_SUCCESS: 'Cập nhật thông tin phần tử thành công',
-    ERROR_NAME: 'Chiều dài từ %d đến %d ký tự',
-    ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',
-    ERROR_STATUS: 'Phải là một giá trị khác rỗng',
+    ERROR_NAME: 'Chiều dài Name từ %d đến %d ký tự',
+    // ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',
+    ERROR_ORDERING: 'Ordering phải là số nguyên',
+    ERROR_STATUS: 'Status phải là một giá trị khác rỗng',
 };

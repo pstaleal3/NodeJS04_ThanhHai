@@ -13,7 +13,7 @@ const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 
 const linkIndex		 = '/' + systemConfig.prefixAdmin + `/${Collection}/`;
-const pageTitleIndex = Collection + ' Management';
+const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
 const folderView	 = __path_views + `pages/${Collection}/`;
@@ -51,16 +51,15 @@ router.get('(/status/:status)?', async (req, res, next) => {
 });
 // ajax
 router.post('/ajax', (req, res, next) => {
-	let {id, field, value} = req.body;
-	SlidersModel.updateOne({_id: id}, {[field]: value}, (err, result) => {});
-	res.send('success');
+	Model.updateOne(req.body).then(() => {
+		res.send('success');
+	});
 });
 // Change status - Multi
 router.post('/change-status/:status', (req, res, next) => {
 	let currentStatus	= ParamsHelpers.getParam(req.params, 'status', 'active'); 
-	SlidersModel.updateMany({_id: {$in: req.body.cid }}, {status: currentStatus}, (err, result) => {
-		req.flash('success', util.format(notify.CHANGE_STATUS_MULTI_SUCCESS, result.n) , false);
-		res.redirect(linkIndex);
+	Model.updateMany(req.body.cid,'status',currentStatus).then((result, err ) => {
+		req.flash('success', util.format(notify.CHANGE_STATUS_MULTI_SUCCESS, result.n) , linkIndex);
 	});
 });
 
@@ -84,17 +83,15 @@ router.post('/change-ordering', (req, res, next) => {
 // Delete
 router.get('/delete/:id', (req, res, next) => {
 	let id				= ParamsHelpers.getParam(req.params, 'id', ''); 	
-	SlidersModel.deleteOne({_id: id}, (err, result) => {
-		req.flash('success', notify.DELETE_SUCCESS, false);
-		res.redirect(linkIndex);
+	Model.deleteOne(id).then((result, err) => {
+		req.flash('success', notify.DELETE_SUCCESS, linkIndex);
 	});
 });
 
 // Delete - Multi
 router.post('/delete', (req, res, next) => {
-	SlidersModel.remove({_id: {$in: req.body.cid }}, (err, result) => {
-		req.flash('success', util.format(notify.DELETE_MULTI_SUCCESS, result.n), false);
-		res.redirect(linkIndex);
+	Model.deleteMulti(req.body.cid).then((result, err) => {
+		req.flash('success', util.format(notify.DELETE_MULTI_SUCCESS, result.n), linkIndex);
 	});
 });
 
@@ -114,9 +111,9 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 
 // SAVE = ADD EDIT
 router.post('/save', 
-	body('name').isLength({ min: 5 }).withMessage('name 5 ky ty'),
-	body('ordering').isNumeric().withMessage('Ordering phai la so'),
-	body('status').not().isIn(['novalue']).withMessage('Status khac gia tri mac dinh'),
+	body('name').isLength({ min: 5 ,max:20}).withMessage(util.format(notify.ERROR_NAME,5,20)),
+	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
+	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 	(req, res, next) => {
 
 	const errors = validationResult(req);
@@ -132,21 +129,16 @@ router.post('/save',
 		});
 		return;
 	} 
-	let item = Object.assign(req.body);
+	let item = req.body;
 	if(item.id){	// edit	
-		SlidersModel.updateOne({_id: item.id}, {
-			ordering: parseInt(item.ordering),
-			name: item.name,
-			status: item.status
-		}, (err, result) => {
+		Model.updateOne(item).then(() => {
 			req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 		});
 	} else { // add
-		new SlidersModel(item).save().then(()=> {
+		Model.addOne(item).then(()=> {
 			req.flash('success', notify.ADD_SUCCESS, linkIndex);
 		})
 	}	
-		
 });
 
 module.exports = router;
