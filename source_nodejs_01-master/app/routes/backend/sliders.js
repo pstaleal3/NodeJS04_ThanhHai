@@ -24,7 +24,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 	let keyword		 = ParamsHelpers.getParam(req.query, 'keyword', '');
 	let currentStatus= ParamsHelpers.getParam(req.params, 'status', 'all'); 
 	let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus,Collection);
-
+	let sort = req.session;
 	let pagination 	 = {
 		totalItems		 : 1,
 		totalItemsPerPage: 4,
@@ -37,7 +37,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 	pagination.totalItems = await Model.countRow(objWhere);
 
 	Model
-		.getList(objWhere,pagination)
+		.getList(objWhere,pagination,sort)
 		.then( (items) => {
 			res.render(`${folderView}list`, { 
 				pageTitle: pageTitleIndex,
@@ -45,7 +45,8 @@ router.get('(/status/:status)?', async (req, res, next) => {
 				statusFilter,
 				pagination,
 				currentStatus,
-				keyword
+				keyword,
+				sort
 			});
 		});
 });
@@ -64,7 +65,12 @@ router.post('/change-status/:status', (req, res, next) => {
 		req.flash('success', util.format(notify.CHANGE_STATUS_MULTI_SUCCESS, result.n) , linkIndex);
 	});
 });
-
+// Sort
+router.get('/sort/:field/:type', (req, res, next) => {
+	req.session.sortField = req.params.field;
+	req.session.sortType = req.params.type;
+	res.redirect(linkIndex)
+});
 // Change ordering - Multi
 router.post('/change-ordering', (req, res, next) => {
 	let cids 		= req.body.cid;

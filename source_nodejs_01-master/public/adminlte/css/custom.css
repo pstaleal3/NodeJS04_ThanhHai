@@ -64,3 +64,12 @@ a.my-active {
 span.highlight {
     background-color: #e5f421;
 }
+#zt-form table th.sort a {
+    color: #000;
+}
+#zt-form table th.sort a i {
+    opacity: .3;
+}
+#zt-form table th.sort a i.opacity-100 {
+    opacity: 1;
+}

@@ -4,6 +4,7 @@
 <% include ./../../helpers/status %>
 <% include ./../../helpers/highlight %>
 <% include ./../../helpers/userTimeInfo %>
+<% include ./../../helpers/sortField %>
 <% 
 	const collection = "sliders";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
@@ -65,9 +66,13 @@
 							</div>
 						</th>
 						<th class="text-center">#</a></th>
-						<th class="text-center">Name</a></th>
+						<th class="text-center sort">
+							<%- sortField(linkPrefix,'Name','name',sort) %>
+						</th>
 						<th class="text-center">Status</a></th>
-						<th class="text-center">Ordering</a></th>
+						<th class="text-center sort">
+							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
+						</th>
 						<th class="text-center">Created</a></th>
 						<th class="text-center">Modified</a></th>
 						<th class="text-center">Action</th>

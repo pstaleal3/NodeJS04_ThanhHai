@@ -1,9 +1,10 @@
 const Model = require(__path_schemas + 'sliders');
 module.exports = {
-	getList(objWhere, pagination) {
+	getList(objWhere, pagination, {sortField, sortType}) {
+		let sort = sortField && sortType ? {[sortField]: sortType} : {_id: 'desc'};
 		return Model
 			.find(objWhere)
-			.sort({_id: 'desc'})
+			.sort(sort)
 			.skip((pagination.currentPage-1) * pagination.totalItemsPerPage)
 			.limit(pagination.totalItemsPerPage)
 	},	
