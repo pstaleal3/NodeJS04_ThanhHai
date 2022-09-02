@@ -3,7 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-
+const dayjs = require('dayjs')
+var relativeTime = require('dayjs/plugin/relativeTime')
+var locateVi = require('dayjs/locale/vi');
+dayjs.extend(relativeTime)
+dayjs.locale(locateVi)
 const validator = require('express-validator');
 const session = require('express-session');
 const flash = require('express-flash-notification');
@@ -56,7 +60,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Local variable
 app.locals.systemConfig = systemConfig;
-
+app.locals.dayjs = dayjs;
 // Setup router
 app.use(`/${systemConfig.prefixAdmin}`, require(__path_routers + 'backend/index'));
 app.use('/', require(__path_routers + 'frontend/index'));

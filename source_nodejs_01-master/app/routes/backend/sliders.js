@@ -51,14 +51,16 @@ router.get('(/status/:status)?', async (req, res, next) => {
 });
 // ajax
 router.post('/ajax', (req, res, next) => {
+	req.body.modified = {userId: 0,username: 'admin',time: Date.now()};
 	Model.updateOne(req.body).then(() => {
-		res.send('success');
+		res.send(req.body);
 	});
 });
 // Change status - Multi
 router.post('/change-status/:status', (req, res, next) => {
+	req.body.modified = {userId: 0,username: 'admin',time: Date.now()};
 	let currentStatus	= ParamsHelpers.getParam(req.params, 'status', 'active'); 
-	Model.updateMany(req.body.cid,'status',currentStatus).then((result, err ) => {
+	Model.updateMany(req.body,'status',currentStatus).then((result, err ) => {
 		req.flash('success', util.format(notify.CHANGE_STATUS_MULTI_SUCCESS, result.n) , linkIndex);
 	});
 });
@@ -130,11 +132,15 @@ router.post('/save',
 		return;
 	} 
 	let item = req.body;
+	
+
 	if(item.id){	// edit	
+		item.modified = {userId: 0,username: 'admin',time: Date.now()};
 		Model.updateOne(item).then(() => {
 			req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 		});
 	} else { // add
+		item.created = {userId: 0,username: 'admin',time: Date.now()};
 		Model.addOne(item).then(()=> {
 			req.flash('success', notify.ADD_SUCCESS, linkIndex);
 		})

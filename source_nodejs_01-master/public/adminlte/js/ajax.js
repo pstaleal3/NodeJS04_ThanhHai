@@ -21,8 +21,8 @@ const handleAjax = (link,field,id,evt) => {
       method: "post",
       url: link,
       data: { id,field,value},
-      dataType: "html"
-      }).done(function( msg ) {
+      dataType: "json"
+      }).done(function( data ) {
          if(xhtml) {
             $(parent).html(xhtml);
             evt = $(parent).children();

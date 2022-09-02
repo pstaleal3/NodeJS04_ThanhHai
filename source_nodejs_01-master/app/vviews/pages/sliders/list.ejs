@@ -3,6 +3,7 @@
 <% include ./../../helpers/pagination %>
 <% include ./../../helpers/status %>
 <% include ./../../helpers/highlight %>
+<% include ./../../helpers/userTimeInfo %>
 <% 
 	const collection = "sliders";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
@@ -67,6 +68,8 @@
 						<th class="text-center">Name</a></th>
 						<th class="text-center">Status</a></th>
 						<th class="text-center">Ordering</a></th>
+						<th class="text-center">Created</a></th>
+						<th class="text-center">Modified</a></th>
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -95,7 +98,12 @@
 								this
 								)">
 						</td>
-						
+						<td class="text-center">
+							<%- showUserTimeInfo(item.created) %>
+						</td>
+						<td class="text-center">
+							<%- showUserTimeInfo(item.modified) %>
+						</td>
 						<td class="text-center">
 							<a href="<%= linkPrefix %>form/<%= item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">
 								<i class="fas fa-pencil-alt"></i>

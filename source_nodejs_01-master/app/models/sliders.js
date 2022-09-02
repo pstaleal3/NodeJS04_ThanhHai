@@ -11,11 +11,11 @@ module.exports = {
 		return Model.count(objWhere).then(data => data);
 	},
 	updateOne({id,field,value,...restParams} = {}){
-		if(Object.keys(restParams).length != 0) return Model.updateOne({_id: id}, restParams);
-		return Model.updateOne({_id: id}, {[field]: value});
+		if(!field) return Model.updateOne({_id: id}, restParams);
+		return Model.updateOne({_id: id}, {[field]: value,...restParams});
 	},
-	updateMany(arrayId,field,value,operator = '$in') {
-		return Model.updateMany({_id: {[operator]: arrayId }}, {[field]: value});
+	updateMany({cid,...restParams},field,value,operator = '$in') {
+		return Model.updateMany({_id: {[operator]: cid }}, {[field]: value,...restParams});
 	},
 	addOne(obj){
 		return new Model(obj).save();
