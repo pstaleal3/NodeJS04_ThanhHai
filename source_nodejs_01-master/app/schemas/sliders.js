@@ -16,6 +16,7 @@ var schema = new mongoose.Schema({
         username: String,
         time: Date
     },
+    description: String,
 });
 
 module.exports = mongoose.model(databaseConfig.col_sliders, schema );

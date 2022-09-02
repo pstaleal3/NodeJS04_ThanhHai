@@ -2,6 +2,7 @@ var express = require('express');
 var router 	= express.Router();
 const util = require('util');
 const { body, validationResult } = require('express-validator');
+var slug = require('slug');
 
 const Collection = 'sliders';
 const systemConfig  = require(__path_configs + 'system');
@@ -56,6 +57,10 @@ router.post('/ajax', (req, res, next) => {
 	Model.updateOne(req.body).then(() => {
 		res.send(req.body);
 	});
+});
+//slug
+router.post('/slug', (req, res, next) => {
+	res.send(JSON.stringify(slug(req.body.value)));
 });
 // Change status - Multi
 router.post('/change-status/:status', (req, res, next) => {
@@ -120,13 +125,16 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 // SAVE = ADD EDIT
 router.post('/save', 
 	body('name').isLength({ min: 5 ,max:20}).withMessage(util.format(notify.ERROR_NAME,5,20)),
+	body('slug').matches(/[A-Za-z0-9-]+[A-Za-z0-9]$/).withMessage('Slug No Special Character'),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
+
 	(req, res, next) => {
 
 	const errors = validationResult(req);
 	if (!errors.isEmpty()) {
 		let errorsMsg = {};
+		console.log(errors.errors)
 		errors.errors.forEach(value => {
 			errorsMsg[value.param] = value.msg
 		});
@@ -138,7 +146,6 @@ router.post('/save',
 		return;
 	} 
 	let item = req.body;
-	
 
 	if(item.id){	// edit	
 		item.modified = {userId: 0,username: 'admin',time: Date.now()};

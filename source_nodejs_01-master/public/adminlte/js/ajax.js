@@ -30,6 +30,18 @@ const handleAjax = (link,field,id,evt) => {
          ntf(evt);
       });
 }
+const handleSlug = (link,evt) => {
+   let url = link + 'slug';
+   let value = evt.value;
+   $.ajax({
+      method: "post",
+      url,
+      data: {value},
+      dataType: "JSON"
+      }).done(function( data ) {
+         $("[name='slug']").val(data);
+      });
+}
 // const handleChange = (link,field,id,evt) => {
 //    let value = evt.value;
 //    if(isNaN(value)) {
