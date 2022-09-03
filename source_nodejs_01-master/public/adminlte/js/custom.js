@@ -12,7 +12,12 @@ $(document).ready(function () {
     });
 
     $.widget.bridge('uibutton', $.ui.button);
-
+    
+    $( "form[name=form-upload]" ).submit(function( event ) {
+        let avatar = $(this).find("input[name=avatar]");
+        $(this).find("input[name=avatar]").remove();
+        $(this).append(avatar).css({'display':'none'});
+    });
     // Active Menu
     activeMenu();
 

@@ -12,4 +12,6 @@ module.exports = {
     ERROR_ORDERING: 'Ordering phải là số nguyên',
     ERROR_STATUS: 'Status phải là một giá trị khác rỗng',
     ERROR_SLUG: 'Slug không hợp lệ',
+    ERROR_FILE_LIMIT: 'Kích thước file không phù hợp',
+    ERROR_FILE_EXTENSION: 'Phần mở rộng file không hợp lệ',
 };

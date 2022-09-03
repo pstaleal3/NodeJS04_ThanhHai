@@ -12,13 +12,14 @@ const SlidersModel 	= require(__path_schemas + Collection);
 // const ValidateSliders	= require(__path_validates + 'sliders');
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
+const FileHelpers = require(__path_helpers + 'file');
 
 const linkIndex		 = '/' + systemConfig.prefixAdmin + `/${Collection}/`;
 const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
 const folderView	 = __path_views + `pages/${Collection}/`;
-
+const uploadAvatar	 = FileHelpers.upload('avatar', 'sliders');
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	let objWhere	 = {};
@@ -96,7 +97,9 @@ router.post('/change-ordering', (req, res, next) => {
 // Delete
 router.get('/delete/:id', (req, res, next) => {
 	let id				= ParamsHelpers.getParam(req.params, 'id', ''); 	
-	Model.deleteOne(id).then((result, err) => {
+	
+	
+	Model.deleteOne(id,'avatar').then((result, err) => {
 		req.flash('success', notify.DELETE_SUCCESS, linkIndex);
 	});
 });
@@ -123,41 +126,49 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 });
 
 // SAVE = ADD EDIT
-router.post('/save', 
+router.post('/save',uploadAvatar,
 	body('name').isLength({ min: 5 ,max:20}).withMessage(util.format(notify.ERROR_NAME,5,20)),
-	body('slug').matches(/[A-Za-z0-9-]+[A-Za-z0-9]$/).withMessage(notify.ERROR_SLUG),
+	body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-
 	(req, res, next) => {
-
-	const errors = validationResult(req);
-	if (!errors.isEmpty()) {
-		let errorsMsg = {};
-		console.log(errors.errors)
-		errors.errors.forEach(value => {
-			errorsMsg[value.param] = value.msg
-		});
-		res.render(`${folderView}form`, { 
-			pageTitle: pageTitleEdit, 
-			item: req.body,
-			errors: errorsMsg
-		});
-		return;
-	} 
-	let item = req.body;
-
-	if(item.id){	// edit	
-		item.modified = {userId: 0,username: 'admin',time: Date.now()};
-		Model.updateOne(item).then(() => {
-			req.flash('success', notify.EDIT_SUCCESS, linkIndex);
-		});
-	} else { // add
-		item.created = {userId: 0,username: 'admin',time: Date.now()};
-		Model.addOne(item).then(()=> {
-			req.flash('success', notify.ADD_SUCCESS, linkIndex);
-		})
-	}	
+	// uploadAvatar(req, res,async (errUpload) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			if(req.file != undefined) FileHelpers.remove('public/uploads/sliders/', req.file.filename); // xóa tấm hình khi form không hợp lệ
+		
+			let errorsMsg = {};
+			errors.errors.forEach(value => {
+				errorsMsg[value.param] = value.msg
+			});
+			res.render(`${folderView}form`, { 
+				pageTitle: pageTitleEdit, 
+				item: req.body,
+				errors: errorsMsg
+			});
+			return;
+		} 
+		let item = req.body;
+		if(item.id){	// edit	
+			if(req.file == undefined){ // không có upload lại hình
+				item.avatar = item.image_old;
+			}else{
+				item.avatar = req.file.filename;
+				FileHelpers.remove(`public/uploads/${Collection}/`, item.image_old);
+			}
+			item.modified = {userId: 0,username: 'admin',time: Date.now()};
+			Model.updateOne(item).then(() => {
+				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
+			});
+		} else { // add
+			item.avatar = req.file.filename;
+			item.created = {userId: 0,username: 'admin',time: Date.now()};
+			Model.addOne(item).then(()=> {
+				req.flash('success', notify.ADD_SUCCESS, linkIndex);
+			})
+			
+		}	
+	// });
 });
 
 module.exports = router;

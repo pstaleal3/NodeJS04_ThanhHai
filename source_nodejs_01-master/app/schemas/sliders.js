@@ -5,6 +5,7 @@ var schema = new mongoose.Schema({
     name: String, 
     slug: String, 
     status: String,
+    avatar: String,
     ordering: Number,
     created: {
         userId: Number,

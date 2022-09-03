@@ -5,10 +5,12 @@
 <% include ./../../helpers/highlight %>
 <% include ./../../helpers/userTimeInfo %>
 <% include ./../../helpers/sortField %>
+<% include ./../../helpers/image %>
 <% 
 	const collection = "sliders";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
 	const linkAjax = linkPrefix + 'ajax/';
+	const folderUpload 	= `uploads/${collection}/`;
 %>
 
 <%- locals.flash %>
@@ -69,6 +71,7 @@
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Name','name',sort) %>
 						</th>
+						<th class="text-center">Image</th>
 						<th class="text-center">Status</a></th>
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
@@ -91,6 +94,7 @@
 						</td>
 						<td class="text-center"><%= index+1 %></td>
 						<td class="text-center"><%- highlightHelper(item.name, keyword) %></td>
+						<td class="text-center"><%- imageHelper(folderUpload, item.avatar, item.name); %></td>
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
 						</td>

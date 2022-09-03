@@ -7,5 +7,7 @@ module.exports = {
     folder_schemas   : 'schemas',
     folder_validates : 'validates',
     folder_views     : 'vviews',
-    folder_models     : 'models'
+    folder_models    : 'models',
+    folder_public    : 'public',
+    folder_uploads   : 'uploads'
 };
