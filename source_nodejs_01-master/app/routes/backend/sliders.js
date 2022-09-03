@@ -125,7 +125,7 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 // SAVE = ADD EDIT
 router.post('/save', 
 	body('name').isLength({ min: 5 ,max:20}).withMessage(util.format(notify.ERROR_NAME,5,20)),
-	body('slug').matches(/[A-Za-z0-9-]+[A-Za-z0-9]$/).withMessage('Slug No Special Character'),
+	body('slug').matches(/[A-Za-z0-9-]+[A-Za-z0-9]$/).withMessage(notify.ERROR_SLUG),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
 

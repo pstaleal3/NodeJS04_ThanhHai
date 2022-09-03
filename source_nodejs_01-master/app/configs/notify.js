@@ -11,4 +11,5 @@ module.exports = {
     // ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',
     ERROR_ORDERING: 'Ordering phải là số nguyên',
     ERROR_STATUS: 'Status phải là một giá trị khác rỗng',
+    ERROR_SLUG: 'Slug không hợp lệ',
 };
