@@ -35,5 +35,8 @@ module.exports = {
 	},
 	deleteMulti(arrayId){
 		return Model.remove({_id: arrayId});
+	},
+	findById(id) {
+		return Model.findById(id);
 	}
 }

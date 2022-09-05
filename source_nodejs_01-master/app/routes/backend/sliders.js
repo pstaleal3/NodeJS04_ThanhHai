@@ -119,9 +119,9 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 	if(id === '') { // ADD
 		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors});
 	}else { // EDIT
-		SlidersModel.findById(id, (err, item) =>{
+		Model.findById(id).then((item) => {
 			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors});
-		});	
+		})
 	}
 });
 
