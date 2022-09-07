@@ -131,16 +131,29 @@ router.post('/save',uploadAvatar,
 	body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
+	body('avatar').custom((value,{req}) => {
+		const {image_uploaded,image_old} = req.body;
+		if(!image_uploaded && !image_old) {
+			return Promise.reject(notify.ERROR_FILE_EMPTY);
+		}
+		if(req.file) {
+			const regex = new RegExp('(?:jpeg|jpg|png|gif)');
+			if(!regex.test(req.file.filename)) {
+				return Promise.reject(notify.ERROR_FILE_EXTENSION);
+			}
+		}
+		return true;
+	}),
 	(req, res, next) => {
 	// uploadAvatar(req, res,async (errUpload) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			if(req.file != undefined) FileHelpers.remove('public/uploads/sliders/', req.file.filename); // xóa tấm hình khi form không hợp lệ
-		
 			let errorsMsg = {};
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
+
 			res.render(`${folderView}form`, { 
 				pageTitle: pageTitleEdit, 
 				item: req.body,
@@ -156,13 +169,13 @@ router.post('/save',uploadAvatar,
 				item.avatar = req.file.filename;
 				FileHelpers.remove(`public/uploads/${Collection}/`, item.image_old);
 			}
-			item.modified = {userId: 0,username: 'admin',time: Date.now()};
+			
 			Model.updateOne(item).then(() => {
 				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 			});
 		} else { // add
 			item.avatar = req.file.filename;
-			item.created = {userId: 0,username: 'admin',time: Date.now()};
+			
 			Model.addOne(item).then(()=> {
 				req.flash('success', notify.ADD_SUCCESS, linkIndex);
 			})

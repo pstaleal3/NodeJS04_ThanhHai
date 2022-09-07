@@ -7,17 +7,17 @@ var schema = new mongoose.Schema({
     status: String,
     avatar: String,
     ordering: Number,
-    created: {
-        userId: Number,
-        username: String,
-        time: Date
-    },
-    modified: {
-        userId: Number,
-        username: String,
-        time: Date
-    },
+    // created: {
+    //     userId: Number,
+    //     username: String,
+    //     time: Date
+    // },
+    // modified: {
+    //     userId: Number,
+    //     username: String,
+    //     time: Date
+    // },
     description: String,
-});
+},{ timestamps: true });
 
 module.exports = mongoose.model(databaseConfig.col_sliders, schema );

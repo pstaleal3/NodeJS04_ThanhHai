@@ -14,4 +14,5 @@ module.exports = {
     ERROR_SLUG: 'Slug không hợp lệ',
     ERROR_FILE_LIMIT: 'Kích thước file không phù hợp',
     ERROR_FILE_EXTENSION: 'Phần mở rộng file không hợp lệ',
+    ERROR_FILE_EMPTY: 'Vui lòng chọn file hình',
 };

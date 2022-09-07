@@ -1,5 +1,6 @@
 <% 
-    showUserTimeInfo = ({username,time})  => {
+    showUserTimeInfo = (time)  => {
+        let username = 'admin';
         username = username ? `<i class="fas fa-user"></i> ${username}` : '';
         time     = time ? `<i class="fas fa-clock"></i> ${dayjs().to(dayjs(time))}` : '';    
         let xhtml = `<span>${username}</span><br />
