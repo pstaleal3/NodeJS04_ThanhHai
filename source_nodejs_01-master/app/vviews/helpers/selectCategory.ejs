@@ -1,0 +1,13 @@
+<% 
+  selectCategory = (listCategory,currentCategory,page,link = null,id = null) => {
+    let xhtml = `<select class="js-example-basic-single" name="categoriesId" onChange="handleAjax('${link}','categoriesId','${id}',this)">`;
+    xhtml += page == 'form' ? '<option value="novalue">Choose Category</option>' : '';
+    listCategory.forEach(item => {
+      let selected = item._id == currentCategory ? 'selected' : '';
+      xhtml += `<option value="${item._id}" ${selected}>${item.name}</option>`;
+    });
+    xhtml += '</select>'
+    return xhtml;
+  }
+  
+%>

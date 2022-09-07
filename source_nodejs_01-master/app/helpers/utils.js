@@ -1,3 +1,4 @@
+const databaseConfig = require(__path_configs + 'database');
 let createFilterStatus =  async (currentStatus,collection) => {
 	const Model = require(__path_schemas +  collection);
     let statusFilter = [
@@ -31,9 +32,15 @@ const countCollection = async (arrKey, collectionModel) => {
 	}
 	return collectionModel;
 }
+const getCategory = async () => {
+	const Model = require(__path_schemas + databaseConfig.col_categories);
+	const listCategory = await Model.find({});
+	return listCategory;
+}
 
 module.exports = {
     createFilterStatus: createFilterStatus,
 		firstLetterUppercase,
-		countCollection
+		countCollection,
+		getCategory
 }

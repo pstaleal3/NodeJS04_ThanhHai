@@ -2,6 +2,9 @@ const handleAjax = (link,field,id,evt) => {
    let value; let xhtml;
    let parent = $(evt).parent();
    switch (field) {
+      case 'categoriesId':
+         value = $(evt).val();
+         break;
       case 'status':
          value = $(evt).data('value') == 'active' ? 'inactive' : 'active';
          xhtml = `<a href="javascript:void(0)" class="rounded-circle btn btn-sm ${value == 'active' ? 'btn-success' : 'btn-warning'}" onClick="handleAjax('${link}','status','${id}',this)" data-value="${value}"><i class="fas fa-check"></i></a>`;
@@ -17,6 +20,7 @@ const handleAjax = (link,field,id,evt) => {
       default:
          break;
    }
+   console.log(id,field,value)
    $.ajax({
       method: "post",
       url: link,

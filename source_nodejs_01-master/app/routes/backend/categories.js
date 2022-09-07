@@ -4,12 +4,10 @@ const util = require('util');
 const { body, validationResult } = require('express-validator');
 var slug = require('slug');
 
-const Collection = 'sliders';
+const Collection = 'categories';
 const systemConfig  = require(__path_configs + 'system');
 const notify  		= require(__path_configs + 'notify');
 const Model 		= require(__path_models + Collection);
-const SlidersModel 	= require(__path_schemas + Collection);
-// const ValidateSliders	= require(__path_validates + 'sliders');
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 const FileHelpers = require(__path_helpers + 'file');
@@ -19,8 +17,7 @@ const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Managem
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
 const folderView	 = __path_views + `pages/${Collection}/`;
-const uploadAvatar	 = FileHelpers.upload('avatar', Collection);
-// List items
+
 router.get('(/status/:status)?', async (req, res, next) => {
 	let objWhere	 = {};
 	let keyword		 = ParamsHelpers.getParam(req.query, 'keyword', '');
@@ -78,21 +75,21 @@ router.get('/sort/:field/:type', (req, res, next) => {
 	res.redirect(linkIndex)
 });
 // Change ordering - Multi
-router.post('/change-ordering', (req, res, next) => {
-	let cids 		= req.body.cid;
-	let orderings 	= req.body.ordering;
+// router.post('/change-ordering', (req, res, next) => {
+// 	let cids 		= req.body.cid;
+// 	let orderings 	= req.body.ordering;
 	
-	if(Array.isArray(cids)) {
-		cids.forEach((item, index) => {
-			SlidersModel.updateOne({_id: item}, {ordering: parseInt(orderings[index])}, (err, result) => {});
-		})
-	}else{ 
-		SlidersModel.updateOne({_id: cids}, {ordering: parseInt(orderings)}, (err, result) => {});
-	}
+// 	if(Array.isArray(cids)) {
+// 		cids.forEach((item, index) => {
+// 			SlidersModel.updateOne({_id: item}, {ordering: parseInt(orderings[index])}, (err, result) => {});
+// 		})
+// 	}else{ 
+// 		SlidersModel.updateOne({_id: cids}, {ordering: parseInt(orderings)}, (err, result) => {});
+// 	}
 
-	req.flash('success', notify.CHANGE_ORDERING_SUCCESS, false);
-	res.redirect(linkIndex);
-});
+// 	req.flash('success', notify.CHANGE_ORDERING_SUCCESS, false);
+// 	res.redirect(linkIndex);
+// });
 
 // Delete
 router.get('/delete/:id', (req, res, next) => {
@@ -126,21 +123,11 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 });
 
 // SAVE = ADD EDIT
-router.post('/save',uploadAvatar,
-	body('name').isLength({ min: 5 ,max:20}).withMessage(util.format(notify.ERROR_NAME,5,20)),
+router.post('/save',
+	body('name').notEmpty().withMessage(notify.ERROR_NAME_EMPTY),
 	body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-	body('avatar').custom((value,{req}) => {
-		const {image_uploaded,image_old} = req.body;
-		if(!image_uploaded && !image_old) {
-			return Promise.reject(notify.ERROR_FILE_EMPTY);
-		}
-		if(!req.file && image_uploaded) {
-				return Promise.reject(notify.ERROR_FILE_EXTENSION);
-		}
-		return true;
-	}),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -148,7 +135,7 @@ router.post('/save',uploadAvatar,
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
-			req.body.avatar = req.body.image_old;
+
 			res.render(`${folderView}form`, { 
 				pageTitle: pageTitleEdit, 
 				item: req.body,
@@ -157,21 +144,15 @@ router.post('/save',uploadAvatar,
 			return;
 		} 
 		let item = req.body;
-		if(item.id){	// edit	
-			if(!req.file){ // không có upload lại hình
-				item.avatar = item.image_old;
-			}else{
-				item.avatar = req.file.filename;
-				FileHelpers.remove(`public/uploads/${Collection}/`, item.image_old);
-			}
+		if(item.id){	// edit		
 			Model.updateOne(item).then(() => {
 				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 			});
 		} else { // add
-			item.avatar = req.file.filename;
 			Model.addOne(item).then(()=> {
 				req.flash('success', notify.ADD_SUCCESS, linkIndex);
 			})
+			
 		}	
 });
 

@@ -2,15 +2,15 @@ var express = require('express');
 var router = express.Router();
 const {countCollection} 	= require(__path_helpers + 'utils');
 const folderView	 = __path_views + 'pages/dashboard/';
-const ItemsModel 	= require(__path_schemas + 'items');
 const SlidersModel 	= require(__path_schemas + 'sliders');
-const UsersModel 	= require(__path_schemas + 'users');
+const CategoriesModel 	= require(__path_schemas + 'categories');
+const ArticlesModel 	= require(__path_schemas + 'articles');
 /* GET dashboard page. */
 router.get('/', async(req, res, next) => {
 	let collectionModel = {
 		'Sliders': SlidersModel,
-		'Items': ItemsModel,
-		'Users': UsersModel,
+		'Categories': CategoriesModel,
+		'Articles': ArticlesModel,
 	};
 	collectionModel = await countCollection(Object.keys(collectionModel),collectionModel);
 	res.render(`${folderView}index`, { 

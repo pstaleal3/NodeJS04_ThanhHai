@@ -1,4 +1,4 @@
-const Collection = 'sliders';
+const Collection = 'articles';
 const Model = require(__path_schemas + Collection);
 const FileHelpers = require(__path_helpers + 'file');
 module.exports = {

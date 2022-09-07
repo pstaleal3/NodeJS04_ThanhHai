@@ -5,5 +5,7 @@ module.exports = {
     database: 'db',
     col_items: 'items',
     col_sliders: 'sliders',
-    col_users: 'users'
+    col_users: 'users',
+    col_categories: 'categories',
+    col_articles: 'articles'
 };

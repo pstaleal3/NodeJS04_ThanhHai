@@ -22,17 +22,18 @@ let uploadFile = (field, folderDes = 'users', fileNameLength = 10, fileSizeMb = 
 		},
 		fileFilter: (req, file, cb) => {
 		
-			// const filetypes = new RegExp(fileExtension);
-			// const extname 	= filetypes.test(path.extname(file.originalname).toLowerCase());
-			// const mimetype  = filetypes.test(file.mimetype);
+			const filetypes = new RegExp(fileExtension);
+			const extname 	= filetypes.test(path.extname(file.originalname).toLowerCase());
+			const mimetype  = filetypes.test(file.mimetype);
 	
-			// if(mimetype && extname){
-			// 	return cb(null,true);
-			// }else {
+			if(mimetype && extname){
+				return cb(null,true);
+			}
+			// else {
 			// 	cb(notify.ERROR_FILE_EXTENSION);
 			// 	return cb(null,false);
 			// }			
-			return cb(null,true);
+			return cb(null,false);
 		},
 	}).single(field);
 
