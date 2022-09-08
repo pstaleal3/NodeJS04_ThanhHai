@@ -34,7 +34,7 @@ const countCollection = async (arrKey, collectionModel) => {
 }
 const getCategory = async () => {
 	const Model = require(__path_schemas + databaseConfig.col_categories);
-	const listCategory = await Model.find({});
+	const listCategory = await Model.find({status: 'active'});
 	return listCategory;
 }
 

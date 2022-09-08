@@ -98,7 +98,7 @@
 						</td>
 						<td class="text-center"><%= index+1 %></td>
 						<td class="text-center"><%- highlightHelper(item.title, keyword) %></td>
-						<td class="text-center position-relative"><%- selectCategory(listCategory,item.categoriesId,'list',linkAjax,item.id) %></td>
+						<td class="text-center position-relative"><%- selectCategory(listCategory,item.categoriesId,'list',null,linkAjax,item.id) %></td>
 						<td class="text-center"><%- imageHelper(folderUpload, item.thumbnail, item.slug); %></td>
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
