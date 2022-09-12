@@ -16,7 +16,7 @@ const linkIndex		 = '/' + systemConfig.prefixAdmin + `/${Collection}/`;
 const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
-const folderView	 = __path_views + `pages/${Collection}/`;
+const folderView	 = __path_view_admin + `pages/${Collection}/`;
 
 router.get('(/status/:status)?', async (req, res, next) => {
 	let objWhere	 = {};

@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const {countCollection} 	= require(__path_helpers + 'utils');
-const folderView	 = __path_views + 'pages/dashboard/';
+const folderView	 = __path_view_admin + 'pages/dashboard/';
 const SlidersModel 	= require(__path_schemas + 'sliders');
 const CategoriesModel 	= require(__path_schemas + 'categories');
 const ArticlesModel 	= require(__path_schemas + 'articles');

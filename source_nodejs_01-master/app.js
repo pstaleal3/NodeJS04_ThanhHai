@@ -26,6 +26,8 @@ global.__path_routers   = __path_app + pathConfig.folder_routers + '/';
 global.__path_schemas   = __path_app + pathConfig.folder_schemas + '/';
 global.__path_validates = __path_app + pathConfig.folder_validates + '/';
 global.__path_views     = __path_app + pathConfig.folder_views + '/';
+global.__path_view_admin     = __path_views + pathConfig.folder_module_admin + '/';
+global.__path_view_blog      = __path_views + pathConfig.folder_module_blog + '/';
 global.__path_public      = __base + pathConfig.folder_public + '/';
 global.__path_uploads     = __path_public + pathConfig.folder_uploads + '/';
 
@@ -44,7 +46,7 @@ app.use(session({
   saveUninitialized: true}
 ));
 app.use(flash(app, {
-   viewName: __path_views + 'elements/notify',
+   viewName: __path_view_admin + 'elements/notify',
  }));
  
 // view engine setup
@@ -52,7 +54,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(expressLayouts);
 // app.set('layout', __path_views + 'backend');
-app.set('layout', __path_views + 'admin');
+app.set('layout', __path_view_admin + 'admin');
 
 // app.use(logger('dev'));
 app.use(express.json());
@@ -78,8 +80,11 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   // render the error page
-  res.status(err.status || 500);
-  res.render(__path_views +  'pages/error', { pageTitle   : 'Page Not Found ' });
+ 
+    res.status(err.status || 500);
+    res.render(__path_view_admin +  'pages/error', { pageTitle   : 'Page Not Found ' });
+ 
+
 });
 
 module.exports = app;

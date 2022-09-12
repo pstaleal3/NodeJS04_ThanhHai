@@ -1,4 +1,5 @@
 
 module.exports = {
-    prefixAdmin: 'adminCCC'
+    prefixAdmin: 'adminCCC',
+    env: 'production',
 };

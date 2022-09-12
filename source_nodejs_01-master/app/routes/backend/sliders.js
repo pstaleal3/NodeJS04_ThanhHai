@@ -18,7 +18,7 @@ const linkIndex		 = '/' + systemConfig.prefixAdmin + `/${Collection}/`;
 const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Management';
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
-const folderView	 = __path_views + `pages/${Collection}/`;
+const folderView	 = __path_view_admin + `pages/${Collection}/`;
 const uploadAvatar	 = FileHelpers.upload('avatar', Collection);
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
