@@ -5,14 +5,27 @@
     page,
     error = null,
     link = null,
-    id = null
+    idArticles = null,
+    field = 'categoriesId'
   ) => {
-    let xhtml = `<select class="custom-select custom-select-sm ${error && 'is-invalid'}" name="categoriesId" onChange="handleAjax('${link}','categoriesId','${id}',this)">`;
-    xhtml += page == 'form' ? '<option value="novalue">Choose Category</option>' : '';
-    listCategory.forEach(item => {
-      let selected = item._id == currentCategory ? 'selected' : '';
-      xhtml += `<option value="${item._id}" ${selected}>${item.name}</option>`;
-    });
+    optionCategory = (listCategory, parentId = 0, str = '') => {
+      let xhtml = '';
+
+      listCategory.forEach((item,index)=> {
+        let selected = item.id == currentCategory ? 'selected' : '';
+        if(parentId == item.parentId) { 
+          xhtml += `<option value="${item._id}" ${selected}>${str + item.name}</option>`;
+          xhtml += optionCategory(listCategory,item.id,str += '- - ');
+          str = ''
+        }
+      }) 
+      return xhtml;
+    }
+
+    let xhtml = `<select class="custom-select custom-select-sm ${error && 'is-invalid'}" name="${field}" onChange="handleAjax('${link}','categoriesId','${idArticles}',this)">`;
+    xhtml += page == 'form' ? 
+    '<option value="novalue">Choose Category</option><option value="0">----- Root -----</option>' : '';
+    xhtml += optionCategory(listCategory)
     xhtml += `</select><span class="error invalid-feedback">${error}</span>`
     return xhtml;
   }

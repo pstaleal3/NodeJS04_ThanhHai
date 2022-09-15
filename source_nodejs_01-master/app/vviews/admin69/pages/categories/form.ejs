@@ -1,4 +1,5 @@
 <% include ./../../helpers/image %>
+<% include ./../../helpers/selectCategory %>
 <% 
 	const collection = "categories";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
@@ -26,6 +27,14 @@
 				<div class="col-xs-12 col-sm-8">
 					<input type="text" name="slug" value="<%= item.slug %>" class="form-control form-control-sm <%= errors.slug && 'is-invalid' %>">
 					<%- `<span class="error invalid-feedback">${errors.slug}</span>` %>
+				</div>
+			</div>
+
+			<div class="form-group row">
+				<label for="name" class="col-sm-2 col-form-label text-sm-right required">Category</label>
+				<div class="col-xs-12 col-sm-8">
+						<%- selectCategory(listCategory,item.id,'form',errors.parentId,null,null,'parentId') %>
+					</select>
 				</div>
 			</div>
 

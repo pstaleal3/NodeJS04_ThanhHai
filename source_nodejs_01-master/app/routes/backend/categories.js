@@ -24,6 +24,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 	let currentStatus= ParamsHelpers.getParam(req.params, 'status', 'all'); 
 	let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus,Collection);
 	let sort = req.session;
+	let listCategory = await UtilsHelpers.getCategory();
 	let pagination 	 = {
 		totalItems		 : 1,
 		totalItemsPerPage: 4,
@@ -45,7 +46,8 @@ router.get('(/status/:status)?', async (req, res, next) => {
 				pagination,
 				currentStatus,
 				keyword,
-				sort
+				sort,
+				listCategory
 			});
 		});
 });
@@ -109,15 +111,16 @@ router.post('/delete', (req, res, next) => {
 });
 
 // FORM
-router.get(('/form(/:id)?'), (req, res, next) => {
+router.get(('/form(/:id)?'),async (req, res, next) => {
 	let id		= ParamsHelpers.getParam(req.params, 'id', '');
 	let item	= {name: '', ordering: 0, status: 'novalue'};
 	let errors   = null;
+	let listCategory = await UtilsHelpers.getCategory();
 	if(id === '') { // ADD
-		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors});
+		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors,listCategory});
 	}else { // EDIT
 		Model.findById(id).then((item) => {
-			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors});
+			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors,listCategory});
 		})
 	}
 });
@@ -125,21 +128,23 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 // SAVE = ADD EDIT
 router.post('/save',
 	body('name').notEmpty().withMessage(notify.ERROR_NAME_EMPTY),
+	body('parentId').not().isIn(['novalue']).withMessage(notify.ERROR_Category),
 	body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-	(req, res, next) => {
+	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			let errorsMsg = {};
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
-
+			let listCategory = await UtilsHelpers.getCategory();
 			res.render(`${folderView}form`, { 
 				pageTitle: pageTitleEdit, 
 				item: req.body,
-				errors: errorsMsg
+				errors: errorsMsg,
+				listCategory
 			});
 			return;
 		} 
