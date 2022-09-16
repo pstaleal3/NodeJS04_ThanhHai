@@ -8,15 +8,19 @@
     idArticles = null,
     field = 'categoriesId'
   ) => {
-    optionCategory = (listCategory, parentId = 0, str = '') => {
+    optionCategory = (listCategory, parentId = 0, indent = 0) => {
       let xhtml = '';
 
       listCategory.forEach((item,index)=> {
         let selected = item.id == currentCategory ? 'selected' : '';
+        let str = '';
+        for(let i = 0; i < indent; i++) {
+          str += "- - "
+        }
         if(parentId == item.parentId) { 
           xhtml += `<option value="${item._id}" ${selected}>${str + item.name}</option>`;
-          xhtml += optionCategory(listCategory,item.id,str += '- - ');
-          str = ''
+          xhtml += optionCategory(listCategory,item.id, indent + 1);
+          
         }
       }) 
       return xhtml;
