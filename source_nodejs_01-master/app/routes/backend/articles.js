@@ -29,7 +29,7 @@ router.get('(/status/:status)?', async (req, res, next) => {
 	let listCategory = await UtilsHelpers.getCategory();
 	let pagination 	 = {
 		totalItems		 : 1,
-		totalItemsPerPage: 4,
+		totalItemsPerPage: 10,
 		currentPage		 : parseInt(ParamsHelpers.getParam(req.query, 'page', 1)),
 		pageRanges		 : 3
 	};

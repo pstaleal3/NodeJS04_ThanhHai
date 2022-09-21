@@ -4,7 +4,6 @@
 	const collection = "categories";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
 	errors = errors ?? {};
-	const folderUpload 	= `uploads/${collection}/`;
 %>
 
 <div class="card card-info card-outline">
@@ -31,9 +30,9 @@
 			</div>
 
 			<div class="form-group row">
-				<label for="name" class="col-sm-2 col-form-label text-sm-right required">Category</label>
+				<label for="name" class="col-sm-2 col-form-label text-sm-right required">Parent Category</label>
 				<div class="col-xs-12 col-sm-8">
-						<%- selectCategory(listCategory,item.id,'form',errors.parentId,null,null,'parentId') %>
+						<%- selectCategory(listCategory,item.parentId,'form',errors.parentId,null,null,'parentId') %>
 					</select>
 				</div>
 			</div>

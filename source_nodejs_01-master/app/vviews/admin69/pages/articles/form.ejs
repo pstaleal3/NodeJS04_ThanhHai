@@ -33,7 +33,7 @@
 			<div class="form-group row">
 				<label for="name" class="col-sm-2 col-form-label text-sm-right required">Category</label>
 				<div class="col-xs-12 col-sm-8">
-						<%- selectCategory(listCategory,item.categoriesId,'form',errors.categoriesId) %>
+						<%- selectCategory(listCategory,item.categoriesId,'',errors.categoriesId) %>
 					</select>
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 			<div class="form-group row">
 				<label for="name" class="col-sm-2 col-form-label text-sm-right required">Ordering</label>
 				<div class="col-xs-12 col-sm-8">
-					<input type="text" name="ordering" value="<%= item.ordering %>" class="form-control form-control-sm <%= errors.ordering && 'is-invalid' %>">
+					<input type="text" name="ordering" value="<%= item.ordering ?? 0 %>" class="form-control form-control-sm <%= errors.ordering && 'is-invalid' %>">
 					<%- `<span class="error invalid-feedback">${errors.ordering}</span>` %>
 				</div>
 			</div>

@@ -1,4 +1,6 @@
 const databaseConfig = require(__path_configs + 'database');
+let Parser = require('rss-parser');
+let parser = new Parser();
 let createFilterStatus =  async (currentStatus,collection) => {
 	const Model = require(__path_schemas +  collection);
     let statusFilter = [
@@ -37,10 +39,25 @@ const getCategory = async () => {
 	const listCategory = await Model.find({status: 'active'});
 	return listCategory;
 }
-
+const mapDataRss = async (listRss) => {
+		return await Promise.all (listRss.map(async item => {
+		let {items} = await parser.parseURL(item.link);
+		let result = items.map(item => {
+			let obj = {};
+			obj.title = item.title;
+			obj.content = item.content.substr(item.content.indexOf('</br>') + 5);
+			obj.link = item.link;
+			let match = item.content.match(/<img[^>]+src="([^">]+)"/) ?? [];
+			obj.image = match[1]
+			return obj;
+		})
+		return result;
+	}))
+}
 module.exports = {
     createFilterStatus: createFilterStatus,
 		firstLetterUppercase,
 		countCollection,
-		getCategory
+		getCategory,
+		mapDataRss
 }

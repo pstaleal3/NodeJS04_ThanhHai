@@ -7,6 +7,7 @@
 <% include ./../../helpers/sortField %>
 <% include ./../../helpers/image %>
 <% include ./../../helpers/selectCategory %>
+<% include ./../../helpers/getStringLength%>
 <% 
 	const collection = "articles";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
@@ -75,13 +76,13 @@
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Categories','categories',sort) %>
 						</th>
-						<th class="text-center">Image</th>
+						<!-- <th class="text-center">Image</th> -->
 						<th class="text-center">Status</a></th>
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
 						</th>
 						<th class="text-center">Created</a></th>
-						<th class="text-center">Modified</a></th>
+						<!-- <th class="text-center">Modified</a></th> -->
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -99,7 +100,7 @@
 						<td class="text-center"><%= index+1 %></td>
 						<td class="text-center"><%- highlightHelper(item.title, keyword) %></td>
 						<td class="text-center position-relative"><%- selectCategory(listCategory,item.categoriesId,'list',null,linkAjax,item.id) %></td>
-						<td class="text-center"><%- imageHelper(folderUpload, item.thumbnail, item.slug); %></td>
+						<!-- <td class="text-center"><%# imageHelper(folderUpload, item.thumbnail, item.slug); %></td> -->
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
 						</td>
@@ -115,9 +116,9 @@
 						<td class="text-center">
 							<%- showUserTimeInfo(item.createdAt) %>
 						</td>
-						<td class="text-center">
-							<%- showUserTimeInfo(item.updatedAt) %>
-						</td>
+						<!-- <td class="text-center">
+							<%# showUserTimeInfo(item.updatedAt) %>
+						</td> -->
 						<td class="text-center">
 							<a href="<%= linkPrefix %>form/<%= item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">
 								<i class="fas fa-pencil-alt"></i>

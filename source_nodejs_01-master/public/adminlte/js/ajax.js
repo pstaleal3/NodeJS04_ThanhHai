@@ -5,6 +5,13 @@ const handleAjax = (link,field,id,evt) => {
       case 'categoriesId':
          value = $(evt).val();
          break;
+      case 'parentId':
+         value = $(evt).val();
+         if(id == value) {
+            ntf(evt,'error','error')
+            return;
+         }
+         break;
       case 'status':
          value = $(evt).data('value') == 'active' ? 'inactive' : 'active';
          xhtml = `<a href="javascript:void(0)" class="rounded-circle btn btn-sm ${value == 'active' ? 'btn-success' : 'btn-warning'}" onClick="handleAjax('${link}','status','${id}',this)" data-value="${value}"><i class="fas fa-check"></i></a>`;
@@ -16,6 +23,20 @@ const handleAjax = (link,field,id,evt) => {
             ntf(evt,'Please Insert Number','error')
             return;
          } 
+         break;
+      case 'link':
+         value = evt.value;
+         var pattern = new RegExp(
+            '^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+         if(!pattern.test(value)) {
+            ntf(evt,'Link ko hop le','error')
+            return;
+         }
          break;
       default:
          break;

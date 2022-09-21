@@ -8,4 +8,6 @@ router.use('/sliders', require('./sliders'));
 router.use('/users', require('./users'));
 router.use('/categories', require('./categories'));
 router.use('/articles', require('./articles'));
+router.use('/menu', require('./menu'));
+router.use('/rss', require('./rss'));
 module.exports = router;
