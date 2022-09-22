@@ -1,3 +1,4 @@
+<% include ./../helpers/nestedMenu %>
 <!-- Header -->
 <header class="rt-header sticky-on">
 
@@ -118,64 +119,7 @@
           <!-- start main menu -->
           <div class="main-menu">
             <nav class="main-menu__nav">
-              <ul>
-                <li class="main-menu__nav_sub list active">
-                  <a class="animation" href="javascript:void(0)">Home</a>
-                  <ul class="main-menu__dropdown">
-                    <li><a href="index.html">Home 01 - Main</a></li>
-                    <li><a href="index2.html">Home 02 - Technology</a></li>
-                    <li><a href="index3.html">Home 03 - Gaming</a></li>
-                    <li><a href="index4.html">Home 04 - Illustration</a></li>
-                    <li><a href="index5.html">Home 05 - Newspaper</a></li>
-                    <li><a href="index6.html">Home 06 - Magazine</a></li>
-                    <li><a href="index7.html">Home 07 - Sports</a></li>
-                    <li><a href="index8.html">Home 08 - Travels</a></li>
-                    <li><a href="index9.html">Home 09 - Fitness</a></li>
-                  </ul>
-                </li>
-                <li class="main-menu__nav_sub list">
-                  <a class="animation" href="javascript:void(0)">Features</a>
-                  <ul class="main-menu__dropdown">
-                    <li class="main-menu__nav_sub">
-                      <a href="javascript:void(0)">
-                        Post Layout
-                      </a>
-                      <ul>
-                        <li><a href="single-post1.html">Single Post 01</a></li>
-                        <li><a href="single-post2.html">Single Post 02</a></li>
-                        <li><a href="single-post3.html">Single Post 03</a></li>
-                      </ul>
-                    </li>
-                    <li><a href="author.html">Author Deatils</a></li>
-                  </ul>
-                </li>
-                <li class="main-menu__nav_sub list">
-                  <a class="animation" href="javascript:void(0)">Categories </a>
-                  <ul class="main-menu__dropdown">
-                    <li><a href="life-style.html">Life Style</a></li>
-                    <li><a href="technology.html">Technology</a></li>
-                    <li><a href="gaming.html">Gaming</a></li>
-                    <li><a href="graphics.html">Graphics</a></li>
-                    <li><a href="politics.html">Politics</a></li>
-                  </ul>
-                </li>
-                <li class="main-menu__nav_sub list">
-                  <a class="animation" href="javascript:void(0)">Pages</a>
-                  <ul class="main-menu__dropdown">
-                    <li><a href="about.html">About Us</a></li>
-                    <li><a href="contact.html">Contact Us</a></li>
-                    <li><a href="404.html">404</a></li>
-
-                  </ul>
-                </li>
-                <li class="main-menu__nav_sub list">
-                  <a class="animation" href="javascript:void(0)">Shop</a>
-                  <ul class="main-menu__dropdown">
-                    <li><a href="shop.html">Shop</a></li>
-                    <li><a href="single-shop.html">Shop Deatils</a></li>
-                  </ul>
-                </li>
-              </ul>
+              <ul><%- showMenu() %></ul>
             </nav>
           </div>
           <!-- end main menu -->

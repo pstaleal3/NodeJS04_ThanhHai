@@ -41,14 +41,17 @@ const getCategory = async () => {
 }
 const mapDataRss = async (listRss) => {
 		return await Promise.all (listRss.map(async item => {
+		let category = item.name;
 		let {items} = await parser.parseURL(item.link);
 		let result = items.map(item => {
 			let obj = {};
 			obj.title = item.title;
-			obj.content = item.content.substr(item.content.indexOf('</br>') + 5);
+			obj.content = item.contentSnippet;
+			obj.date = item.pubDate;
 			obj.link = item.link;
 			let match = item.content.match(/<img[^>]+src="([^">]+)"/) ?? [];
-			obj.image = match[1]
+			obj.image = match[1];
+			obj.category = category;
 			return obj;
 		})
 		return result;
