@@ -9,5 +9,6 @@ module.exports = {
     col_categories: 'categories',
     col_articles: 'articles',
     col_menu: 'menu',
-    col_rss: 'rss'
+    col_rss: 'rss',
+    col_settings: 'settings'
 };

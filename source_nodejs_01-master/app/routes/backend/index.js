@@ -10,4 +10,5 @@ router.use('/categories', require('./categories'));
 router.use('/articles', require('./articles'));
 router.use('/menu', require('./menu'));
 router.use('/rss', require('./rss'));
+router.use('/settings', require('./settings'));
 module.exports = router;
