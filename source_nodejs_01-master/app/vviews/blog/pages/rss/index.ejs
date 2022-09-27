@@ -1,4 +1,5 @@
 <% include ./../../helpers/rssList %>
+<% include ./../../helpers/pagination %>
 <main>
   <% include ./../../elements/breadcrumb %>
   <section class="rt-sidebar-section-layout-1" style="transform: none;">
@@ -9,24 +10,11 @@
           <div class="theiaStickySidebar" style="padding-top: 0px; padding-bottom: 1px; position: static; transform: none; top: 0px; left: 303.5px;">
             <div class="rt-left-sidebar-sapcer-5">
               <div class="post-list-style-4">
-              <%- rssList(rss,5) %>
+              <%- rssList(rss) %>
               </div>
               <!-- end post-list-style-4 -->
               <nav class="rt-pagination-area gap-top-90">
-                  <ul class="pagination rt-pagination justify-content-center">
-                    <li class="page-item prev">
-                        <a class="page-link" href="#"><i class="fas fa-angle-double-left"></i></a>
-                    </li>
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link">1</span>
-                    </li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item next">
-                        <a class="page-link" href="#"><i class="fas fa-angle-double-right"></i></a>
-                    </li>
-                  </ul>
+                  <%- paginationHelper(paginationObj,'rss') %>
               </nav>
               <!-- end rt-pagination-area -->
             </div>
@@ -50,7 +38,7 @@
   </section>
 </main>
 <script>
-  setTimeout(() => {
-    window.scrollTo(0, 1);
-  }, 1);
+  $(document).ready(function() {
+    window.scroll(0, 1);
+  })
 </script>

@@ -10,16 +10,30 @@ const rssModel 		= require(__path_schemas + col_rss);
 
 
 /* GET home page. */
-router.get('/',async (req, res, next) => {
+router.get('/(:page)?',async (req, res, next) => {
   const listCategory = await categoryModel.find({status:'active'}).sort({ordering: 'asc'});
   const listMenu = await menuModel.find({status:'active'}).sort({ordering: 'asc'});
   const rssList = await rssModel.find({status:'active'}).select('name link');
-  UtilsHelpers.mapDataRss(rssList).then(data => {
+  let page = req.params.page || 1;
+  UtilsHelpers.getRss(rssList,req).then(data => {
+    let totalItemsPerPage = 10;
+    data = UtilsHelpers.mapRssPagination(data,totalItemsPerPage);
+    let paginationObj = {
+      totalItems		 : data.length * 10,
+      totalItemsPerPage,
+      currentPage		 : parseInt(page),
+      pageRanges		 : 3
+    }
+    if(!data[page - 1]) {
+      res.redirect('/')
+      return;
+    }
     res.render(`${folderView}index`, { 
       layout,
       listMenu,
       listCategory,
-      rss: data
+      rss: data[page - 1],
+      paginationObj
     });
   });
 });

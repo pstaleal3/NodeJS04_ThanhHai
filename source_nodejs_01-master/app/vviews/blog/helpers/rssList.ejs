@@ -1,56 +1,54 @@
 <%
-rssList = (items,length = 5) => {
+rssList = (items) => {
   let xhtml = '';
   if (items) items.forEach(item => {
-      for (let i = 0; i < length; i++) {
-      xhtml += `<div class="post-item wow fadeInUp animated" data-wow-delay="100ms" data-wow-duration="800ms" style="visibility: visible; animation-duration: 800ms; animation-delay: 100ms; animation-name: fadeInUp;">
-        <div class="rt-post post-md style-9 grid-meta">
-            <div class="post-img">
-              <a href="${item[i].link}">
-              <img src="${item[i].image}" alt="post" width="696" height="491">
-              </a>
+    xhtml += `<div class="post-item wow fadeInUp animated" data-wow-delay="100ms" data-wow-duration="800ms" style="visibility: visible; animation-duration: 800ms; animation-delay: 100ms; animation-name: fadeInUp;">
+      <div class="rt-post post-md style-9 grid-meta">
+          <div class="post-img">
+            <a href="${item.link}">
+            <img src="${item.image}" alt="post" width="696" height="491">
+            </a>
+          </div>
+          <div class="post-content">
+            <a href="technology.html" class="rt-cat-primary">${item.category}</a>
+            <h3 class="post-title">
+                <a href="${item.link}">
+                ${item.title}
+                </a>
+            </h3>
+            <p>
+              ${item.content}
+            </p>
+            <div class="post-meta">
+                <ul>
+                  <li>
+                      <span class="rt-meta">
+                      by <a href="author.html" class="name">HaiDepTrai</a>
+                      </span>
+                  </li>
+                  <li>
+                      <span class="rt-meta">
+                      <i class="far fa-calendar-alt icon"></i>
+                      ${dayjs().to(dayjs(item.date))}
+                      </span>
+                  </li>
+                </ul>
             </div>
-            <div class="post-content">
-              <a href="technology.html" class="rt-cat-primary">${item[i].category}</a>
-              <h3 class="post-title">
-                  <a href="${item[i].link}">
-                  ${item[i].title}
-                  </a>
-              </h3>
-              <p>
-                ${item[i].content}
-              </p>
-              <div class="post-meta">
-                  <ul>
-                    <li>
-                        <span class="rt-meta">
-                        by <a href="author.html" class="name">HaiDepTrai</a>
-                        </span>
-                    </li>
-                    <li>
-                        <span class="rt-meta">
-                        <i class="far fa-calendar-alt icon"></i>
-                        ${dayjs().to(dayjs(item[i].date))}
-                        </span>
-                    </li>
-                  </ul>
-              </div>
-              <div class="btn-wrap mt--25">
-                  <a href="${item[i].link}" class="rt-read-more qodef-button-animation-out rt-button-animation-out">
-                    Read More
-                    <svg width="34px" height="16px" viewBox="0 0 34.53 16" xml:space="preserve">
-                        <rect class="qodef-button-line" y="7.6" width="34" height=".4">
-                        </rect>
-                        <g class="qodef-button-cap-fake">
-                          <path class="qodef-button-cap" d="M25.83.7l.7-.7,8,8-.7.71Zm0,14.6,8-8,.71.71-8,8Z"></path>
-                        </g>
-                    </svg>
-                  </a>
-              </div>
+            <div class="btn-wrap mt--25">
+                <a href="${item.link}" class="rt-read-more qodef-button-animation-out rt-button-animation-out">
+                  Read More
+                  <svg width="34px" height="16px" viewBox="0 0 34.53 16" xml:space="preserve">
+                      <rect class="qodef-button-line" y="7.6" width="34" height=".4">
+                      </rect>
+                      <g class="qodef-button-cap-fake">
+                        <path class="qodef-button-cap" d="M25.83.7l.7-.7,8,8-.7.71Zm0,14.6,8-8,.71.71-8,8Z"></path>
+                      </g>
+                  </svg>
+                </a>
             </div>
-        </div>
-      </div> `;
-    }
+          </div>
+      </div>
+    </div> `;
   })
   return xhtml;
 }
