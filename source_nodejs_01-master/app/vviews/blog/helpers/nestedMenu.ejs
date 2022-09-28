@@ -1,12 +1,14 @@
 <% 
-  let mappingData = (item => {
+  let mappingData = ((item) => {
       let obj = {}; 
       obj.name = item.name;
       obj.slug = item.slug;
       obj.parentId = item.parentId;
       obj.id = item.id;
+      obj.link = item.link;
       return obj; 
   });
+
 
   let category = listCategory.map(mappingData);
   let menu = listMenu.map(mappingData);
@@ -42,11 +44,10 @@
         classLi = '';
         classUl = '';
       }
-      let link = item.slug;
       if(item.child.length > 0) {
         classLi = 'main-menu__nav_sub list';
       }
-      xhtml += `<li class="${classLi}"><a href="${link}">${item.name}</a>`
+      xhtml += `<li class="${classLi}"><a href="${item.link}">${item.name}</a>`
       if(item.child.length > 0) {
         xhtml += `<ul class="${classUl}">`;
         xhtml += nestedMenu(item.child, level + 1);

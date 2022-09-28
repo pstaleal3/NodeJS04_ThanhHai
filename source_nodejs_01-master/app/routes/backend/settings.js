@@ -47,7 +47,6 @@ router.post('/save',uploadAvatar,
 		return true;
 	}),
 	async (req, res, next) => {
-	// uploadAvatar(req, res,async (errUpload) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			let errorsMsg = {};

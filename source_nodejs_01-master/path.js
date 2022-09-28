@@ -11,5 +11,6 @@ module.exports = {
     folder_module_blog  : 'blog',
     folder_models    : 'models',
     folder_public    : 'public',
-    folder_uploads   : 'uploads'
+    folder_uploads   : 'uploads',
+    folder_middleware   : 'middleware',
 };

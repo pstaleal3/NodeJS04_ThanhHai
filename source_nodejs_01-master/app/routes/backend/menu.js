@@ -116,7 +116,6 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 	let item	= {name: '', ordering: 0, status: 'novalue'};
 	let errors   = null;
 	let listMenu = await Model.getList();
-	console.log(listMenu)
 	if(id === '') { // ADD
 		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item, errors,listMenu});
 	}else { // EDIT

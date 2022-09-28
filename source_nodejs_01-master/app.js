@@ -30,7 +30,7 @@ global.__path_view_admin     = __path_views + pathConfig.folder_module_admin + '
 global.__path_view_blog      = __path_views + pathConfig.folder_module_blog + '/';
 global.__path_public      = __base + pathConfig.folder_public + '/';
 global.__path_uploads     = __path_public + pathConfig.folder_uploads + '/';
-
+global.__path_middleware= __path_app + pathConfig.folder_middleware + '/';
 const systemConfig = require(__path_configs + 'system');
 const databaseConfig = require(__path_configs + 'database');
 
@@ -55,7 +55,7 @@ app.set('view engine', 'ejs');
 app.use(expressLayouts);
 // app.set('layout', __path_views + 'backend');
 app.set('layout', __path_view_admin + 'admin');
-
+// app.set('layout', __path_view_blog + 'frontend');
 // app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -83,7 +83,7 @@ app.use(function(err, req, res, next) {
  
     res.status(err.status || 500);
     res.render(__path_view_admin +  'pages/error', { pageTitle   : 'Page Not Found ' });
- 
+    // res.render(__path_view_blog +  'pages/error', { pageTitle   : 'Page Not Found ' });
 
 });
 

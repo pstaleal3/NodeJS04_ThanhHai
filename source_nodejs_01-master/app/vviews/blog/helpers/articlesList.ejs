@@ -1,23 +1,25 @@
+<% include getStringLength %>
 <%
-rssList = (items) => {
+show = (items) => {
   let xhtml = '';
   if (items) items.forEach(item => {
+    let link = 'p/'+item.slug;
     xhtml += `<div class="post-item wow fadeInUp animated" data-wow-delay="100ms" data-wow-duration="800ms" style="visibility: visible; animation-duration: 800ms; animation-delay: 100ms; animation-name: fadeInUp;">
       <div class="rt-post post-md style-9 grid-meta">
           <div class="post-img">
-            <a href="${item.link}" target="_blank">
-            <img src="${item.image}" alt="post" width="696" height="491">
+            <a href="${link}" >
+            <img src="uploads/articles/${item.thumbnail}" alt="post" width="696" style="height:250px;object-fit: contain">
             </a>
           </div>
           <div class="post-content">
-            <a href="${item.link}" class="rt-cat-primary" target="_blank">${item.category}</a>
+            <a href="c/${categorySlug}" class="rt-cat-primary" >${categoryName}</a>
             <h3 class="post-title">
-                <a href="${item.link}" target="_blank">
+                <a href="${link}" >
                 ${item.title}
                 </a>
             </h3>
             <p>
-              ${item.content}
+              ${getStringLength(item.description,30)}
             </p>
             <div class="post-meta">
                 <ul>
@@ -29,13 +31,13 @@ rssList = (items) => {
                   <li>
                       <span class="rt-meta">
                       <i class="far fa-calendar-alt icon"></i>
-                      ${dayjs().to(dayjs(item.date))}
+                      ${dayjs().to(dayjs(item.createdAt))}
                       </span>
                   </li>
                 </ul>
             </div>
             <div class="btn-wrap mt--25">
-                <a href="${item.link}" class="rt-read-more qodef-button-animation-out rt-button-animation-out" target="_blank">
+                <a href="${link}" class="rt-read-more qodef-button-animation-out rt-button-animation-out" >
                   Read More
                   <svg width="34px" height="16px" viewBox="0 0 34.53 16" xml:space="preserve">
                       <rect class="qodef-button-line" y="7.6" width="34" height=".4">
