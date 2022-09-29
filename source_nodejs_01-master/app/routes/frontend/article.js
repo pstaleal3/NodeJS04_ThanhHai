@@ -18,11 +18,16 @@ router.get('/(:slug)?',async (req, res, next) => {
     categoriesId: article.categoriesId,
     _id: {$ne: article.id}
   })
+  let breadcrumb = [
+    {name: category.name, link: 'c/' + category.slug},
+    {name: article.title}
+  ];
   res.render(`${folderView}index`, { 
     layout,
     article,
     relative,
-    category
+    category,
+    breadcrumb
   })
 });
 

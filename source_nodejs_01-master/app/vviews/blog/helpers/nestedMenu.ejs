@@ -8,11 +8,9 @@
       obj.link = item.link;
       return obj; 
   });
-
-
   let category = listCategory.map(mappingData);
   let menu = listMenu.map(mappingData);
-
+  
   const nestedChild = (arr, parentId = 0) => {
     let result = [];
     arr.forEach((item,index) => {
@@ -36,7 +34,7 @@
   menu = menu.filter(item => item.parentId == 0);
 
   nestedMenu = (item, level = 1) => {
-    let xhtml = ''; 
+    let xhtml = '';
     item.forEach(item => {
       let classLi = 'main-menu__nav list';
       let classUl = 'main-menu__dropdown';

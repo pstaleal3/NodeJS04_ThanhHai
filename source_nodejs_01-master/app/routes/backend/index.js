@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
+const middleAuthentication = require(__path_middleware + 'auth');
 
-router.use('/', require('./dashboard'));
+router.use('/',middleAuthentication ,require('./dashboard'));
 router.use('/dashboard', require('./dashboard'));
 router.use('/items', require('./items'));
 router.use('/sliders', require('./sliders'));

@@ -12,7 +12,7 @@ router.get('/(:category)?(/:page)?',async (req, res, next) => {
   let category = await categoryModel.findOne({slug: categoryslug}).select('id name');
   let paginationObj = {
     totalItems		 : await articlesModel.count({categoriesId: category.id}),
-    totalItemsPerPage: 1,
+    totalItemsPerPage: 3,
     currentPage		 : parseInt(page),
     pageRanges		 : 3
   }
@@ -24,12 +24,14 @@ router.get('/(:category)?(/:page)?',async (req, res, next) => {
     if(articlesList.length == 0) {
       res.redirect('/');
     } else {
+      let breadcrumb = [{name: category.name}];
       res.render(`${folderView}index`, { 
         articlesList,
         paginationObj,
         layout,
         categoryName:category.name,
-        categorySlug:categoryslug
+        categorySlug:categoryslug,
+        breadcrumb
       })
     }
   })

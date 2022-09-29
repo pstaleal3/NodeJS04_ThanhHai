@@ -153,3 +153,19 @@
 <!-- end header -->
 
 <%# include headerMobile %>
+
+<script>
+  $('.main-menu__nav > ul > li > a ').each((index,value) => {
+    let name = value.textContent.toLowerCase();
+    let url = window.location.href;
+    let params = url.substring(url.indexOf('/',7)+1,url.length)
+    if(
+        params && name.includes(params) || 
+        !params && index == 0 ||
+        name == 'category' && (params.includes('c/') || params.includes('p/'))
+      )
+      {
+        $(value).parent().addClass('active');
+      }
+  });
+</script>

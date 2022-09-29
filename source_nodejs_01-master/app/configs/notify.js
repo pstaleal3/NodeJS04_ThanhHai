@@ -18,4 +18,7 @@ module.exports = {
     ERROR_FILE_LIMIT: 'Kích thước file không phù hợp',
     ERROR_FILE_EXTENSION: 'Phần mở rộng file không hợp lệ',
     ERROR_FILE_EMPTY: 'Vui lòng chọn file hình',
+    ERROR_LOGIN_USERNAME_NOTEXIST: 'Username không tồn tại',
+    ERROR_LOGIN_PASSWORD_INCORRECT: 'Password không chính xác',
+    ERROR_LOGIN: 'Thông tin đăng nhập không chính xác',
 };

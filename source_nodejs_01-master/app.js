@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport')
 const dayjs = require('dayjs')
 var relativeTime = require('dayjs/plugin/relativeTime')
 var locateVi = require('dayjs/locale/vi');
@@ -45,6 +46,9 @@ app.use(session({
   resave: false,
   saveUninitialized: true}
 ));
+require(__path_configs + 'passport')(passport);
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash(app, {
    viewName: __path_view_admin + 'elements/notify',
  }));
