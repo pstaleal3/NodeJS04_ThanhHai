@@ -31,12 +31,12 @@ const folderUpload 	= `uploads/${collection}/`;
 									aria-labelledby="header-settings-tab">
 
 									<div class="form-group row">
-										<label for="thumbnail" class="col-sm-2 col-form-label text-sm-right required">Logo</label>
+										<label for="logoHeader" class="col-sm-2 col-form-label text-sm-right required">Logo</label>
 										<div class="col-xs-12 col-sm-8">
 											<div class="custom-file">
-												<input id="imgInp" class="form-control custom-file-input <%= errors.thumbnail && 'is-invalid' %>" type="file" name="thumbnail">
+												<input id="imgInp" class="form-control custom-file-input <%= errors.logoHeader && 'is-invalid' %>" type="file" name="logoHeader">
 												<label class="custom-file-label" for="imgInp">Choose file</label>
-												<%- `<span class="error invalid-feedback">${errors.thumbnail}</span>` %>
+												<%- `<span class="error invalid-feedback">${errors.logoHeader}</span>` %>
 											</div>
 										</div>
 									</div>
@@ -44,7 +44,7 @@ const folderUpload 	= `uploads/${collection}/`;
 									<div class="form-group row">
 										<div class="col-sm-2 col-form-label"></div>
 										<div class="col-xs-12 col-sm-8">
-										<%- imageHelper(folderUpload, item.logo, item.name,'200','200'); %>
+										<%- imageHelper(folderUpload, item.logoHeader, item.name,'200','200'); %>
 										</div>
 									</div>
 
@@ -63,8 +63,26 @@ const folderUpload 	= `uploads/${collection}/`;
 									<div class="form-group row">
 										<label for="description" class="col-sm-2 col-form-label text-sm-right required">Content</label>
 										<div class="col-xs-12 col-sm-8">
-											<textarea id="editor" name="content"><%= item.content  %></textarea>
+											<textarea id="editor" name="content"><%= item.content %></textarea>
 											<!-- <span class="error invalid-feedback">undefined</span> -->
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<label for="logoFooter" class="col-sm-2 col-form-label text-sm-right required">Logo</label>
+										<div class="col-xs-12 col-sm-8">
+											<div class="custom-file">
+												<input id="logoFooter" class="form-control custom-file-input <%= errors.logoFooter && 'is-invalid' %>" type="file" name="logoFooter">
+												<label class="custom-file-label" for="imgInp">Choose file</label>
+												<%- `<span class="error invalid-feedback">${errors.logoFooter}</span>` %>
+											</div>
+										</div>
+									</div>
+
+									<div class="form-group row">
+										<div class="col-sm-2 col-form-label"></div>
+										<div class="col-xs-12 col-sm-8">
+										<%- imageHelper(folderUpload, item.logoFooter, item.name,'200','200','showLogoFooter'); %>
 										</div>
 									</div>
 
@@ -78,8 +96,13 @@ const folderUpload 	= `uploads/${collection}/`;
 			<div class="card-footer">
 				<div class="col-12 col-sm-8 offset-sm-2">
 					<input class="form-control" name="id" value="<%= item.id %>" type="hidden">
-					<input name="image_old" value="<%= item.logo %>" type="hidden" />
-					<input name="image_uploaded" value="" type="hidden" id="image_uploaded" />
+
+					<input name="image_header_old" value="<%= item.logoHeader %>" type="hidden" />
+					<input name="image_header_uploaded" value="" type="hidden" id="image_header_uploaded" />
+
+					<input name="image_footer_old" value="<%= item.logoFooter %>" type="hidden" />
+					<input name="image_footer_uploaded" value="" type="hidden" id="image_footer_uploaded" />
+
 					<input type="hidden" name="name" value="">
 					<button type="submit" class="btn btn-sm btn-success mr-1"> Submit</button>
 					<a href="<%= linkPrefix %>" class="btn btn-sm btn-danger mr-1"> Cancel</a>
@@ -99,7 +122,15 @@ const folderUpload 	= `uploads/${collection}/`;
 				const [file] = imgInp.files
 				if (file) {
 					showImage.src = URL.createObjectURL(file)
-					image_uploaded.setAttribute('value','uploaded')
+					image_header_uploaded.setAttribute('value','uploaded')
+				}
+			}
+
+			logoFooter.onchange = evt => {
+				const [file] = logoFooter.files
+				if (file) {
+					showLogoFooter.src = URL.createObjectURL(file)
+					image_footer_uploaded.setAttribute('value','uploaded')
 				}
 			}
 			function notImage(e,folder) {
