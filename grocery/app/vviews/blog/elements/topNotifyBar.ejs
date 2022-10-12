@@ -1,0 +1,151 @@
+<div class="top-notification-bar">
+  <div class="container">
+    <div class="row">
+      <div class="col">
+        <ul class="notification-entry">
+          <li class="notify-wrap">
+            <p><span>Free Shipping</span> Orders From All item</p>
+          </li>
+          <li class="notify-wrap">
+            <div class="notification-option">
+              <div class="user-wrap ele-wrap">
+                <a href="/account" class="acc-ti" title="">Account <i class="ion-ios-arrow-down"></i></a>
+                <div class="top-dropdown">
+                  
+                  <div class="acc-desk">
+                    <div class="acc">
+                      <div class="acc-re-lo">
+                        <a href="/account/register">Register</a>
+                        <a href="/account/login">Log in</a>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <a href="/checkout"><span>Checkout</span></a>
+                  <a href="/pages/wishlist"><span>My Wishlist</span></a>
+                  <a href="/account"><span>Order History</span></a>
+                  <a href="/cart" class="ft-sublink">My Cart</a>
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<style type="text/css">
+.top-notification-bar {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    
+    background-image: url("https://cdn.shopify.com/s/files/1/0412/8151/9765/files/topbar.jpg?v=1613781964");
+    
+}
+.top-notification-bar .notification-entry p span {
+    animation: blinker 0.7s infinite;
+    font-weight: 600;
+}
+@keyframes blinker {
+  50% {
+    color: var(--color-primary);
+  }
+}
+.top-notification-bar ul.notification-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.top-notification-bar ul.notification-entry li p {
+    margin-bottom: 0;
+    color: #ffffff;
+}
+.top-notification-bar ul.notification-entry li .notification-option {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.top-notification-bar ul.notification-entry li .notification-option .search-wrap {
+    display: none;
+}
+.top-notification-bar ul.notification-entry li .notification-option button.search-mobile-btn {
+    font-size: 20px;
+    color: #ffffff;
+    font-weight: 600;
+    line-height: 0;
+}
+.top-notification-bar ul.notification-entry li .notification-option .modal .modal-dialog {
+    max-width: 100%;
+    margin: 0 0;
+}
+.top-notification-bar ul.notification-entry li .notification-option .modal-content {
+    border-radius: 0;
+    border: none;
+}
+.top-notification-bar ul.notification-entry li .notification-option .modal-body {
+    padding: 10px 15px;
+}
+
+@media (max-width: 767px) {
+    .top-notification-bar ul.notification-entry li.notify-wrap:nth-child(1) {
+        display: none;
+    }
+    .top-notification-bar ul.notification-entry li .notification-option .search-wrap {
+        display: block;
+    }
+}
+
+.notification-option .user-wrap{
+    position: relative;
+}
+.notification-option .user-wrap .acc-ti{
+    margin-bottom: 0;
+    color: #ffffff;
+    text-transform: uppercase;
+    position: relative;
+    padding: 10px 15px;
+}
+.notification-option .user-wrap .top-dropdown {
+    position: absolute;
+    padding: 15px;
+    width: 165px;
+    
+    right: 0;
+    
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.08);
+    z-index: 2;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease-in-out 0s;
+}
+.notification-option .user-wrap:hover .top-dropdown {
+    top: 100%;
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: all 0.2s ease-in-out 0s;
+    -o-transition: all 0.2s ease-in-out 0s;
+    transition: all 0.2s ease-in-out 0s;
+}
+.notification-option .user-wrap .top-dropdown > a {
+    display: block;
+    margin-top: 5px;
+}
+.notification-option .user-wrap .top-dropdown .acc-re-lo .acc-desk{
+    display: flex;
+    align-items: center;
+}
+.notification-option .user-wrap .top-dropdown .acc-re-lo a::after{
+    content: "/";
+    margin: 0 5px;
+}
+.notification-option .user-wrap .top-dropdown .acc-re-lo a:last-child::after{
+    display: none;
+}
+@media (max-width: 767px) { 
+    .top-notification-bar ul.notification-entry{
+        justify-content: flex-end;
+    }
+}
+</style>

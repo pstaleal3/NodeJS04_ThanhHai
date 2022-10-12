@@ -1,0 +1,227 @@
+  <!-- Necessary JS -->
+  <script src="https://cdn.shopify.com/s/files/1/0412/8151/9765/t/3/assets/timber.js?v=132333331929781479291659331196" type="text/javascript"></script>
+  <script src="https://cdn.shopify.com/s/files/1/0412/8151/9765/t/3/assets/cart.api.js?v=122899487380019360431659767941" type="text/javascript"></script>
+  <script>Shopify.money_format = "${{amount}}";</script>
+  <script>
+    
+  </script>
+  <script>
+    $(function() {
+      // Current Ajax request.
+      var currentAjaxRequest = null;
+  
+      // Grabbing all search forms on the page, and adding a .search-results list to each.
+      var searchForms = 
+          $('form[action="/search"]').css('position','relative').each(function() {
+  
+            // Grabbing text input.
+            var input = $(this).find('input[name="q"]');
+  
+            // Adding a list for showing search results.
+            var offSet = input.position().top + input.innerHeight();
+            $('<ul class="search-results"></ul>').css( { 'position': 'absolute', 'left': '0px', 'top': offSet } ).appendTo($(this)).hide();    
+  
+            // Listening to keyup and change on the text field within these search forms.
+            input.attr('autocomplete', 'off').bind('keyup change', function() {
+  
+              // What's the search term?
+              var term = $(this).val();
+              console.log(term);
+              // What's the search form?
+              var form = $(this).closest('form');
+  
+              // What's the search URL?
+              var searchURL = '/search?type=product&q=' + term;
+  
+              // What's the search results list?
+              var resultsList = form.find('.search-results');
+  
+              // If that's a new term and it contains at least 3 characters.
+              if (term.length >= 1 && term != $(this).attr('data-old-term')) {
+                //alert('dsfds');
+                // Saving old query.
+                $(this).attr('data-old-term', term);
+  
+                // Killing any Ajax request that's currently being processed.
+                if (currentAjaxRequest != null) currentAjaxRequest.abort();
+  
+                // Pulling results.
+                currentAjaxRequest = $.getJSON(searchURL + '&view=json', function(data) {
+                  // Reset results.
+                  resultsList.empty();
+  
+                  // If we have no results.
+                  if(data.results_count == 0) {
+  
+                    // resultsList.html('<li><span class="title">No results.</span></li>');
+                    // resultsList.fadeIn(200);
+                    resultsList.hide();
+                  } else {
+  
+                    // If we have results.
+                    $.each(data.results, function(index, item) {
+                      var link = $('<a></a>').attr('href', item.url);
+                      link.append('<div class="thumbnail"><img src="' + item.thumbnail + '" /></div>');
+                      link.append('<div class="text-conetnt"><h6>'+ item.title +'</h6><div class="price-box"><span class="new-price">' + item.newprice + '</span><span class="old-price">' + item.oldprice + '</span></div></div>');
+                      link.wrap('<li></li>');
+                      resultsList.append(link.parent());
+                    });
+  
+                    // The Ajax request will return at the most 10 results.
+                    // If there are more than 10, let's link to the search results page.
+                    if(data.results_count > 10) {
+                      resultsList.append('<li><span class="title"><a href="' + searchURL + '">See all results (' + data.results_count + ')</a></span></li>');
+                    }
+                    resultsList.fadeIn(200);
+                  }        
+                });
+              }
+            });
+          });
+  
+      // Clicking outside makes the results disappear.
+      $('body').bind('click', function(){
+        $('.search-results').hide();
+      });
+    });
+  </script>
+  <!-- Some styles to get you started. -->
+  <style>
+    .search-results {
+      position: unset!important;
+      z-index: 9;
+      width: 100%;
+      overflow: hidden;
+      background-color: #fff;
+      padding: 30px;
+      padding-top: 15px;
+      padding-left: 0;
+      display: flex;
+      flex-wrap: wrap;
+      max-height: 430px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-width: thin;
+      -webkit-scrollbar-width: thin;
+    }
+    .search-results::-webkit-scrollbar{
+      width: 4px;
+    }
+    .search-results::-webkit-scrollbar-track{
+      background-color: #eee;
+    }
+    .search-results::-webkit-scrollbar-thumb{
+      background-color: #c1c1c1;
+    }
+    .search-results li {
+      width: calc(33.33% - 15px);
+      margin-left: 15px;
+      display: block;
+      border-bottom: 1px solid #f1f1f1;
+      padding: 15px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .search-results li > a{
+      display: flex;
+      align-items: center;
+    }
+    .search-results .text-conetnt {
+      padding-left: 15px;
+    }
+    .search-results .thumbnail {
+      max-width: 80px;
+    }
+    .search-results .text-conetnt h6 {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .search-results .text-conetnt .price-box{
+      margin-top: 5px;
+    }
+  
+    @media(max-width: 1199px){
+      .search-results {
+        margin-left: -15px;
+      }
+      .search-results li{
+        width: calc(50% - 15px);
+        margin-left: 15px;
+      }
+    }
+    @media(max-width: 767px){
+      .search-results {
+        padding: 0;
+        margin-left: 0;
+      }
+      .search-results li{
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  </style>
+  <div class="productmodal">
+    <div class="modal fade" id="quickViewModal">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2 class="modal-quickview">Quickview</h2>
+            <button type="button" class="close quick-close" data-bs-dismiss="modal"><i class="ion-close-round"></i></button>
+          </div>
+          <div class="modal-body">
+            <div class="quick-view">
+              <div class="quick-view-img">
+                <div class="quick-view-tab-content tab-content">
+                  <div class="product-main-image__item">
+                    <div class="img_box_1"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="quick-view">
+              <div class="quick-view-content">
+                <h2 class="product_title">FROM_JS</h2>
+                <div class="price-box price-part">
+                  <span class="new-price">jsprice</span>
+                  <span class="old-price">jsprice</span>
+                </div>
+                <div class="product-ratting">
+                  <div class="rating">FROM_JS</div>
+                </div>
+                <div class="product-short-desc"></div>
+                <form id="add-item-qv" action="/cart/add" method="post">
+                  <div class="quick-view-select variants select-option-part"></div>
+                  <div class="product-quantity">
+                    <div class="cart-plus-minus">
+                      <input value="1" type="text" name="quantity" min="1" pattern="[0-9]*">
+                    </div>
+                  </div>
+                  <div class="quickview-buttons">
+                    <div class="quickview-btn-cart">
+                      <button type="submit" class="addtocartqv" data-bs-toggle="tooltip" data-bs-placement="top" title="Add to Cart"><i class="fa fa-shopping-bag"></i></button>
+                    </div>
+                    
+                    <div class="quickview-btn-wishlist">
+                      <a class="action-wishlist tile-actions--btn wishlist-btn wishlist" href="javascript:void(0)" data-product-handle="" data-bs-toggle="tooltip" data-bs-placement="top" title="wishlist">
+    <span class="add-wishlist"><i class="fa fa-heart"></i></span>
+    <span class="loading-wishlist load-anim"><i class="ion-load-a"></i></span>
+    <span class="remove-wishlist"><i class="ion-android-close"></i></span>
+  </a>
+                    </div>
+                    
+                  </div>
+                  <script>
+                    jQuery('.addtocartqv').click(function(e) {
+                      e.preventDefault();
+                      Shopify.addItemFromForm('add-item-qv');
+                      jQuery('#quickViewModal').modal('hide');
+                    });
+                  </script> 
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

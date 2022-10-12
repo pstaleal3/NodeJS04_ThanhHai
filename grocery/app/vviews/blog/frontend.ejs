@@ -1,0 +1,46 @@
+<!doctype html>
+<!--[if IE 9]> <html class="ie9 no-js supports-no-cookies" lang="en"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js supports-no-cookies " lang="en"> <!--<![endif]-->
+<head>
+  <% include elements/head %>
+</head>
+
+<body  id="vegist" class="template-index">
+  <div class="preloader"></div>
+<script>
+  $(window).on('load', function() {
+    $('.preloader').fadeOut('slow');
+  }); 
+</script>
+<style>
+  .preloader {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    z-index: 4;
+  }
+</style>
+<% include elements/newsLetterModal %>
+
+
+<% include elements/topNotifyBar %>
+<% include elements/header %>
+<%- body %>
+  <div class="mm-fullscreen-bg"></div>
+<% include elements/footer %>
+<% include elements/productModel %>
+
+
+<div class="quickViewModal_info" style="display: none;">
+  <div class="button"></div>
+  <div class="button_added"></div>
+  <div class="button_error"></div>
+  <div class="button_wait"></div>
+</div>
+
+  <% include elements/script %>
+  </body>
+</html>
