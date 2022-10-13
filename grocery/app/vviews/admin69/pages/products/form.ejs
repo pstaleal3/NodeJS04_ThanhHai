@@ -219,9 +219,14 @@
 	let myDropzone = new Dropzone("#myDropzone", { 
 		url: $("#myDropzone").data('url'),
 		paramName: 'fileMulti',
-  	maxFiles:5,
-		headers: {
-			'x-csrf-token': document.querySelectorAll('meta[name=csrf-token]')[0].getAttributeNode('content').value,
-		},
+		autoProcessQueue:true,
+		addRemoveLinks: true,
+  	maxFiles:10,
+		// init: function() {
+		// 	var myDropzone = this;
+		// 		$("button[type='submit']").click(function(e) {
+		// 		myDropzone.processQueue();
+		// 	});
+		// }
 	});
 </script>

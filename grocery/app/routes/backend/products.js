@@ -128,7 +128,7 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 });
 
 // SAVE = ADD EDIT
-router.post('/save',
+router.post('/save',uploadImage,
 	// body('title').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
 	// body('categoriesId').not().isIn(['novalue']).withMessage(notify.ERROR_Category),
 	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
