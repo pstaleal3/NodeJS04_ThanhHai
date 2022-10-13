@@ -150,7 +150,7 @@
 								<div class="form-group col-md-12">
 									<div class="dropzone" id="myDropzone" data-url="<%= linkPrefix %>upload/">
 										<div class="fallback">
-											<input name="file" type="file" />
+											<input name="fileMulti" type="file" multiple/>
 										</div>
 									</div>
 								</div>
@@ -218,7 +218,10 @@
 	}
 	let myDropzone = new Dropzone("#myDropzone", { 
 		url: $("#myDropzone").data('url'),
-		autoProcessQueue: true,
-		addRemoveLinks: true,
+		paramName: 'fileMulti',
+  	maxFiles:5,
+		headers: {
+			'x-csrf-token': document.querySelectorAll('meta[name=csrf-token]')[0].getAttributeNode('content').value,
+		},
 	});
 </script>

@@ -8,7 +8,7 @@ const Collection = 'products';
 const systemConfig  = require(__path_configs + 'system');
 const notify  		= require(__path_configs + 'notify');
 const Model 		= require(__path_models + Collection);
-const SlidersModel 	= require(__path_schemas + Collection);
+
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 const FileHelpers = require(__path_helpers + 'file');
@@ -18,8 +18,8 @@ const pageTitleIndex = UtilsHelpers.firstLetterUppercase(Collection) + ' Managem
 const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
 const folderView	 = __path_view_admin + `pages/${Collection}/`;
-const uploadImage	 = FileHelpers.upload('file', Collection);
-const uploadAvatar	 = FileHelpers.upload('thumbnail', Collection);
+const uploadImage	 = FileHelpers.upload('fileMulti', Collection);
+
 // List items
 router.get('(/status/:status)?', async (req, res, next) => {
 	let objWhere	 = {};
@@ -128,7 +128,7 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 });
 
 // SAVE = ADD EDIT
-router.post('/save',uploadAvatar,
+router.post('/save',
 	// body('title').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
 	// body('categoriesId').not().isIn(['novalue']).withMessage(notify.ERROR_Category),
 	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
@@ -189,7 +189,8 @@ router.post('/save',uploadAvatar,
 router.post('/upload',uploadImage, async (req, res, next) => { 
 	if(!req.file) {
 		return res.status(422).send('The error message');
-	}
-	return res.status(200).send(req.file);
+	} else {
+		return res.status(200).send(req.files);
+	}	
 });
 module.exports = router;
