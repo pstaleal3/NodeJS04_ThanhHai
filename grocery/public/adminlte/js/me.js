@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    
     var ckbAll = $(".cbAll");
     var fmAdmin = $("#zt-form");
 

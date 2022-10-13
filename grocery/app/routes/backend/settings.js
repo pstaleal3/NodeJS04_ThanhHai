@@ -23,7 +23,6 @@ const uploadAvatar	 = FileHelpers.upload([
 router.get(('/'),async (req, res, next) => {
 	let errors   = null;
 	let item = await Model.findOne({});
-
 	const {copyright, content, logoFooter} = JSON.parse(item.footer);
 	const {logoHeader} = JSON.parse(item.header);
 

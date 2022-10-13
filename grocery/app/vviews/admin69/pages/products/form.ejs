@@ -1,0 +1,224 @@
+<% include ./../../helpers/image %>
+<% include ./../../helpers/selectCategory %>
+<% 
+	const collection="products" ; 
+	const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; 
+	errors=errors ?? {};
+	const folderUpload=`uploads/${collection}/`; 
+%>
+<style>
+	#myDropzone {
+    background: white;
+    border-radius: 5px;
+    border: 2px dashed rgb(0, 135, 247);
+    border-image: none;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
+<div class="card card-info card-outline">
+	<form action="<%= linkPrefix %>save/" method="POST" class="mb-0" name="form-upload"
+		enctype="multipart/form-data">
+		<div class="card-body">
+			<div class="row">
+				<div class="col-md-6">
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Details</h3>
+						</div>
+						<div class="card-body">
+
+							<div class="form-group">
+								<label for="name">Name</label>
+								<input type="text" name="name" value="<%= item.name %>" class="form-control form-control-sm <%= errors.name && 'is-invalid' %>" onKeyUp="handleSlug(
+								'<%= linkPrefix %>',
+								this,
+								)">
+							<%- `<span class="error invalid-feedback">${errors.name}</span>` %>
+							</div>
+							<div class="form-group">
+								<label for="slug">Slug</label>
+								<input type="text" name="slug" value="<%= item.slug %>" class="form-control form-control-sm <%= errors.slug && 'is-invalid' %>">
+								<%- `<span class="error invalid-feedback">${errors.slug}</span>` %>
+							</div>
+							<div class="form-group">
+								<label>Category</label>
+										<%- selectCategory(listCategory,item.categoriesId,'',errors.categoriesId) %>
+									</select>
+							</div>
+							<div class="form-group">
+								<label>Ordering</label>
+								<input type="text" name="ordering" value="<%= item.ordering ?? 0 %>" class="form-control form-control-sm <%= errors.ordering && 'is-invalid' %>">
+								<%- `<span class="error invalid-feedback">${errors.ordering}</span>` %>
+							</div>
+							<div class="form-group">
+								<label>Status</label>
+								<select id="form[status]" name="status" class="custom-select custom-select-sm <%= errors.status && 'is-invalid' %>">
+									<option value="novalue">Choose Status</option>
+									<option value="active" <%= (item.status == "active") ? 'selected="selected"' : '' %> >Active</option>
+									<option value="inactive" <%= (item.status == "inactive") ? 'selected="selected"' : '' %> >Inactive</option>
+								</select>
+								<%- `<span class="error invalid-feedback">${errors.status}</span>` %>
+							</div>
+							<div class="form-group">
+								<label>Description</label>
+								<textarea id="editor" name="description"><%= item.description %></textarea>
+							</div>	
+						</div>
+					</div>
+				</div>
+				<div class="col-md-6">
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Infomation</h3>
+						</div>
+						<div class="card-body" id="infomation">
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<input type="text" class="form-control" placeholder="info" name="infoName">
+								</div>
+								<div class="col-md-7">
+									<input type="text" class="form-control" placeholder="value" name="infoValue">
+								</div>
+								<div class="col-md-1">
+									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+										<i class="fas fa-times"></i>
+									</button>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<input type="text" class="form-control" placeholder="info" name="infoName">
+								</div>
+								<div class="col-md-7">
+									<input type="text" class="form-control" placeholder="value" name="infoValue">
+								</div>
+								<div class="col-md-1">
+									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+										<i class="fas fa-times"></i>
+									</button>
+								</div>
+							</div>
+							<div class="row mb-3">
+								<div class="col-md-4">
+									<input type="text" class="form-control" placeholder="info" name="infoName">
+								</div>
+								<div class="col-md-7">
+									<input type="text" class="form-control" placeholder="value" name="infoValue">
+								</div>
+								<div class="col-md-1">
+									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+										<i class="fas fa-times"></i>
+									</button>
+								</div>
+							</div>
+							<div class="add"></div>
+							<div class="row">
+								<button class="btn btn-primary add-more">
+									<i class="fas fa-plus"></i>
+								</button>
+							</div>
+							
+						</div>
+					</div>
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Atributes</h3>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="form-group">
+									<div class="custom-control custom-checkbox">
+										<input class="custom-control-input" name="attributes" type="checkbox" id="customCheckbox1" value="size">
+										<label for="customCheckbox1" class="custom-control-label">Size</label>
+									</div>
+									<div class="custom-control custom-checkbox">
+										<input class="custom-control-input" name="attributes" type="checkbox" id="customCheckbox2" value="material">
+										<label for="customCheckbox2" class="custom-control-label">Material</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card card-primary">
+						<div class="card-header">
+							<h3 class="card-title">Images</h3>
+						</div>
+						<div class="card-body">
+							<div class="row">
+								<div class="form-group col-md-12">
+									<div class="dropzone" id="myDropzone" data-url="<%= linkPrefix %>upload/">
+										<div class="fallback">
+											<input name="file" type="file" />
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-footer">
+				<div class="col-12 col-sm-8">
+					<input class="form-control" name="id" value="<%= item.id %>" type="hidden">
+					<input name="image_old" value="<%= item.thumbnail %>" type="hidden" />
+					<input name="image_uploaded" value="" type="hidden" id="image_uploaded" />
+					<button type="submit" class="btn btn-sm btn-success mr-1"> Submit</button>
+					<a href="<%= linkPrefix %>" class="btn btn-sm btn-danger mr-1"> Cancel</a>
+				</div>
+			</div>
+	</form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>
+	ClassicEditor
+		.create(document.querySelector('#editor'))
+		.catch(error => {
+			console.error(error);
+		});
+
+	// imgInp.onchange = evt => {
+	// 	const [file] = imgInp.files
+	// 	if (file) {
+	// 		showImage.src = URL.createObjectURL(file)
+	// 		image_uploaded.setAttribute('value', 'uploaded')
+	// 	}
+	// }
+
+	function notImage(e, folder) {
+		e.setAttribute('src', folder + 'no-avatar.png')
+	}
+</script>
+
+<script>
+	$(document).ready(function() {
+		$('.add-more').click(function(e) {
+			e.preventDefault();
+			$('#infomation div.add').append(
+				`<div class="row mb-3">
+						<div class="col-md-4">
+							<input type="text" class="form-control" placeholder="info" name="infoName">
+						</div>
+						<div class="col-md-7">
+							<input type="text" class="form-control" placeholder="value" name="infoValue">
+						</div>
+						<div class="col-md-1">
+							<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+								<i class="fas fa-times"></i>
+							</button>
+						</div>
+					</div>
+			`);
+		});
+	})
+	function closeInfo(obj) {
+		$(obj).parent().parent().remove();
+	}
+	let myDropzone = new Dropzone("#myDropzone", { 
+		url: $("#myDropzone").data('url'),
+		autoProcessQueue: true,
+		addRemoveLinks: true,
+	});
+</script>
