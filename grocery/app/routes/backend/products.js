@@ -129,7 +129,7 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 
 // SAVE = ADD EDIT
 router.post('/save',uploadImage,
-	// body('title').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
+	// body('name').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
 	// body('categoriesId').not().isIn(['novalue']).withMessage(notify.ERROR_Category),
 	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	// body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
@@ -144,10 +144,10 @@ router.post('/save',uploadImage,
 	// 	}
 	// 	return true;
 	// }),
+
 	async (req, res, next) => {
 		res.send(req.body)
 		return;
-	// uploadAvatar(req, res,async (errUpload) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			let errorsMsg = {};
@@ -164,8 +164,8 @@ router.post('/save',uploadImage,
 			});
 			return;
 		} 
+
 		let item = req.body;
-		
 		if(item.id){	// edit	
 			if(!req.file){ // không có upload lại hình
 				item.thumbnail = item.image_old;
@@ -190,7 +190,7 @@ router.post('/upload',uploadImage, async (req, res, next) => {
 	if(!req.file) {
 		return res.status(422).send('The error message');
 	} else {
-		return res.status(200).send(req.files);
+		return res.status(200).send(req.file);
 	}	
 });
 module.exports = router;

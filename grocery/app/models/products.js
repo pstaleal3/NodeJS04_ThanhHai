@@ -21,11 +21,8 @@ module.exports = {
 	updateMany({cid,...restParams},field,value,operator = '$in') {
 		return Model.updateMany({_id: {[operator]: cid }}, {[field]: value,...restParams});
 	},
-	async addOne(obj){
-		let article = await Model(obj).save();
-		let Category = await CategoriesModel.findById(obj.categoriesId);
-		Category.articles.push(article._id);
-		return Category.save();
+	addOne(obj){
+		return new Model(obj).save();
 	},
 	deleteOne(id,field = null){
 		if(field) {

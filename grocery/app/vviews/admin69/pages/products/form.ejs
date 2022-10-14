@@ -164,7 +164,9 @@
 					<input class="form-control" name="id" value="<%= item.id %>" type="hidden">
 					<input name="image_old" value="<%= item.thumbnail %>" type="hidden" />
 					<input name="image_uploaded" value="" type="hidden" id="image_uploaded" />
-					<button type="submit" class="btn btn-sm btn-success mr-1"> Submit</button>
+					<input name="imagesMulti" value="" type="hidden" />
+					<button type="button" name="saveImages" class="btn btn-sm btn-success mr-1" disabled> Save Images</button>
+					<button type="submit" class="btn btn-sm btn-success mr-1" disabled> Submit</button>
 					<a href="<%= linkPrefix %>" class="btn btn-sm btn-danger mr-1"> Cancel</a>
 				</div>
 			</div>
@@ -172,6 +174,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
 <script>
 	ClassicEditor
 		.create(document.querySelector('#editor'))
@@ -216,17 +219,51 @@
 	function closeInfo(obj) {
 		$(obj).parent().parent().remove();
 	}
+	$('#myDropzone').sortable({
+ 	  update: function( event, ui ) {
+			let value = '';
+			$('.dz-filename span').each((index,element) => {
+				value += $(element).data('filename') + ','
+			})
+			if(value) {
+				$("input[name='imagesMulti']").val(value.substr(0,value.length - 1))
+			}
+		}
+	});
+
 	let myDropzone = new Dropzone("#myDropzone", { 
 		url: $("#myDropzone").data('url'),
 		paramName: 'fileMulti',
-		autoProcessQueue:true,
+		autoProcessQueue:false,
 		addRemoveLinks: true,
   	maxFiles:10,
-		// init: function() {
-		// 	var myDropzone = this;
-		// 		$("button[type='submit']").click(function(e) {
-		// 		myDropzone.processQueue();
-		// 	});
-		// }
+		parallelUploads:10,
+		init: function() {
+			var myDropzone = this;
+				$("button[name='saveImages']").click((e) => {
+					$("button[name='saveImages']").prop("disabled", true)
+					$("button[type='submit']").prop("disabled", false)
+					myDropzone.processQueue();
+			});
+			myDropzone.on("addedfile", file => {
+				$("button[name='saveImages']").prop("disabled", false)
+				$("button[type='submit']").prop("disabled", true)
+			});
+			myDropzone.on("success",(file, res) => {
+				$('.dz-filename span').each((index,element) => {
+					let fileName = $(element).text();
+					if(fileName == res.originalname) {
+						$(element).attr('data-filename',res.filename);
+					}
+				});
+				let value = '';
+				$('.dz-filename span').each((index,element) => {
+					value += $(element).data('filename') + ','
+				})
+				if(value) {
+					$("input[name='imagesMulti']").val(value.substr(0,value.length - 1))
+				}
+			})
+		}
 	});
 </script>

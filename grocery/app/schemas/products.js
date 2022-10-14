@@ -13,7 +13,8 @@ var schema = new mongoose.Schema({
         ref: databaseConfig.col_categories 
     },
     info: String,
-    attributes: String
+    attributes: String,
+    images: String
 },{ timestamps: true });
 
 module.exports = mongoose.model(databaseConfig.col_products, schema );
