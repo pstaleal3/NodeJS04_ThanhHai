@@ -11,4 +11,5 @@ router.use('/articles', require('./articles'));
 router.use('/menu', require('./menu'));
 router.use('/settings', require('./settings'));
 router.use('/products', require('./products'));
+router.use('/attributes', require('./attributes'));
 module.exports = router;
