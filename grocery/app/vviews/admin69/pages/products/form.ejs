@@ -131,8 +131,8 @@
 								<div class="form-group">
 									<% listAttributes.forEach(value => { %>
 										<div class="custom-control custom-checkbox">
-											<input class="custom-control-input" name="attributes" type="checkbox" id="customCheckbox1" value="<%= value.id %>">
-											<label for="customCheckbox1" class="custom-control-label"><%= value.name %></label>
+											<input class="custom-control-input" name="attributes" type="checkbox" id="<%= value.id %>" value="<%= value.id %>">
+											<label for="<%= value.id %>" class="custom-control-label"><%= value.name %></label>
 										</div>
 									<% }) %>
 								</div>
