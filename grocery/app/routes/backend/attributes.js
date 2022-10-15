@@ -8,7 +8,7 @@ const Collection = 'attributes';
 const systemConfig  = require(__path_configs + 'system');
 const notify  		= require(__path_configs + 'notify');
 const Model 		= require(__path_models + Collection);
-
+const attributeModel  = require(__path_schemas + Collection);
 const UtilsHelpers 	= require(__path_helpers + 'utils');
 const ParamsHelpers = require(__path_helpers + 'params');
 const FileHelpers = require(__path_helpers + 'file');
@@ -129,6 +129,7 @@ router.post('/save',uploadAvatar,
 	body('name').isLength({ min: 1 ,max:20}).withMessage(util.format(notify.ERROR_NAME,1,20)),
 	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
+	body('attrValue').isNumeric().withMessage(notify.ERROR_ATTRIBUTES),
 	(req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -136,24 +137,17 @@ router.post('/save',uploadAvatar,
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
-			req.body.avatar = req.body.image_old;
+			let item = req.body
+			item.attribute = UtilsHelpers.mappingAttributes(item);
 			res.render(`${folderView}form`, { 
 				pageTitle: pageTitleEdit, 
-				item: req.body,
+				item,
 				errors: errorsMsg
 			});
 			return;
 		} 
 		let item = req.body;
-		let attribute = item.attrName.map((value,index) => {
-			if(value && item.attrValue[index]) {
-				let obj = {};
-				obj['name'] = value;
-				obj['price'] = item.attrValue[index];
-				return obj;
-			}
-		});
-		item.attribute = JSON.stringify(attribute.filter(x => x));
+		item.attribute = UtilsHelpers.mappingAttributes(item);
 
 		if(item.id){	// edit	
 			Model.updateOne(item).then(() => {

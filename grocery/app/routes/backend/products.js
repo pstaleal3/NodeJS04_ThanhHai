@@ -136,16 +136,7 @@ router.post('/save',uploadImage,
 	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	// body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	// body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-	// body('thumbnail').custom((value,{req}) => {
-	// 	const {image_uploaded,image_old} = req.body;
-	// 	if(!image_uploaded && !image_old) {
-	// 		return Promise.reject(notify.ERROR_FILE_EMPTY);
-	// 	}
-	// 	if(!req.file && image_uploaded) {
-	// 			return Promise.reject(notify.ERROR_FILE_EXTENSION);
-	// 	}
-	// 	return true;
-	// }),
+
 
 	async (req, res, next) => {
 		res.send(req.body)

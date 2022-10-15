@@ -10,6 +10,7 @@ module.exports = {
     ERROR_NAME: 'Chiều dài Name từ %d đến %d ký tự',
     ERROR_NAME_EMPTY: 'Name không được để trống',
     ERROR_TITLE_EMPTY: 'Tiêu đề không được để trống',
+    ERROR_ATTRIBUTES: 'Attributes phải là số nguyên',
     // ERROR_ORDERING: 'Phải là số nguyên lớn hơn %d và bé hơn %d',
     ERROR_ORDERING: 'Ordering phải là số nguyên',
     ERROR_STATUS: 'Status phải là một giá trị khác rỗng',

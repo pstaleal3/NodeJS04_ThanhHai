@@ -2,11 +2,7 @@
 	const collection = "attributes";
 	const linkPrefix = systemConfig.prefixAdmin + `/${collection}/`;
 	errors = errors ?? {};
-	let attribute = null;
-	if (item.attribute) {
-		attribute = JSON.parse(item.attribute);
-	}
-
+	let attribute = item.attribute ? JSON.parse(item.attribute) : null;
 %>
 
 <div class="card card-info card-outline">
@@ -66,6 +62,7 @@
 						<input type="text" name="attrValue" value="" class="form-control form-control-sm" >
 					</div>
 					<% } }%>
+					<%- `<span style="color: #dc3545">${errors.attrValue ?? ''}</span>` %>
 				</div>
 				
 			</div>

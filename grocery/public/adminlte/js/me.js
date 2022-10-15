@@ -75,7 +75,7 @@ $(document).ready(function () {
             if(isDelete){
                 var confirmDelete = confirm('Are you really want to delete?');
                 if(confirmDelete === false){
-                    return;
+                    return false;
                 }
             }
 
