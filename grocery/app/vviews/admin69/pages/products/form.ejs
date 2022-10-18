@@ -1,10 +1,13 @@
 <% include ./../../helpers/image %>
 <% include ./../../helpers/selectCategory %>
+<% include ./../../helpers/info %>
+<% include ./../../helpers/image %>
 <% 
 	const collection="products" ; 
 	const linkPrefix=systemConfig.prefixAdmin + `/${collection}/`; 
 	errors=errors ?? {};
 	const folderUpload=`uploads/${collection}/`; 
+	let information = item.information ? JSON.parse(item.information) : null;
 %>
 <style>
 	#myDropzone {
@@ -16,6 +19,11 @@
     margin-left: auto;
     margin-right: auto;
 }
+	.showImage img {
+			cursor: move;
+	}
+	
+
 </style>
 <div class="card card-info card-outline">
 	<form action="<%= linkPrefix %>save/" method="POST" class="mb-0" name="form-upload"
@@ -71,48 +79,10 @@
 				<div class="col-md-6">
 					<div class="card card-primary">
 						<div class="card-header">
-							<h3 class="card-title">Infomation</h3>
+							<h3 class="card-title">Information</h3>
 						</div>
-						<div class="card-body" id="infomation">
-							<div class="row mb-3">
-								<div class="col-md-4">
-									<input type="text" class="form-control" placeholder="info" name="infoName">
-								</div>
-								<div class="col-md-7">
-									<input type="text" class="form-control" placeholder="value" name="infoValue">
-								</div>
-								<div class="col-md-1">
-									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
-										<i class="fas fa-times"></i>
-									</button>
-								</div>
-							</div>
-							<div class="row mb-3">
-								<div class="col-md-4">
-									<input type="text" class="form-control" placeholder="info" name="infoName">
-								</div>
-								<div class="col-md-7">
-									<input type="text" class="form-control" placeholder="value" name="infoValue">
-								</div>
-								<div class="col-md-1">
-									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
-										<i class="fas fa-times"></i>
-									</button>
-								</div>
-							</div>
-							<div class="row mb-3">
-								<div class="col-md-4">
-									<input type="text" class="form-control" placeholder="info" name="infoName">
-								</div>
-								<div class="col-md-7">
-									<input type="text" class="form-control" placeholder="value" name="infoValue">
-								</div>
-								<div class="col-md-1">
-									<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
-										<i class="fas fa-times"></i>
-									</button>
-								</div>
-							</div>
+						<div class="card-body" id="information">
+							<%- create(information) %>
 							<div class="add"></div>
 							<div class="row">
 								<button class="btn btn-primary add-more">
@@ -131,7 +101,7 @@
 								<div class="form-group">
 									<% listAttributes.forEach(value => { %>
 										<div class="custom-control custom-checkbox">
-											<input class="custom-control-input" name="attributes" type="checkbox" id="<%= value.id %>" value="<%= value.id %>">
+											<input class="custom-control-input" name="attributes" type="checkbox" id="<%= value.id %>" value="<%= value.id %>" <%= item.attributes.includes(value.id) ? 'checked' : '' %> >
 											<label for="<%= value.id %>" class="custom-control-label"><%= value.name %></label>
 										</div>
 									<% }) %>
@@ -153,7 +123,36 @@
 									</div>
 								</div>
 							</div>
+							<% if(item.id) { %>
+				
+							<div class="card card-success">
+								<div class="card-header">
+									<h3 class="card-title">Sortable</h3>
+									<div class="card-tools">
+										<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+									</button>
+									</div>						
+								</div>
+								<div class="card-body showImage connectedSort d-flex" style="display: block;">
+									<%- imageMulti(item.images,folderUpload) %>
+								</div>
+							</div>
+
+							<div class="card card-danger">
+								<div class="card-header">
+									<h3 class="card-title">Delete</h3>
+									<div class="card-tools">
+										<button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+									</button>
+									</div>						
+								</div>
+								<div id="trash" class="card-body connectedSort d-flex" style="display: block;">
+									
+								</div>
+							</div>
+							<% } %>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -162,7 +161,7 @@
 					<input class="form-control" name="id" value="<%= item.id %>" type="hidden">
 					<input name="image_old" value="<%= item.thumbnail %>" type="hidden" />
 					<input name="image_uploaded" value="" type="hidden" id="image_uploaded" />
-					<input name="imagesMulti" value="" type="hidden" />
+					<input name="images" value="<%= item.images %>" type="hidden" />
 					<button type="button" name="saveImages" class="btn btn-sm btn-success mr-1" disabled> Save Images</button>
 					<button type="submit" class="btn btn-sm btn-success mr-1" disabled> Submit</button>
 					<a href="<%= linkPrefix %>" class="btn btn-sm btn-danger mr-1"> Cancel</a>
@@ -188,46 +187,55 @@
 	// 	}
 	// }
 
-	function notImage(e, folder) {
-		e.setAttribute('src', folder + 'no-avatar.png')
-	}
+	// function notImage(e, folder) {
+	// 	e.setAttribute('src', folder + 'no-avatar.png')
+	// }
 </script>
 
 <script>
-	$(document).ready(function() {
-		$('.add-more').click(function(e) {
-			e.preventDefault();
-			$('#infomation div.add').append(
-				`<div class="row mb-3">
-						<div class="col-md-4">
-							<input type="text" class="form-control" placeholder="info" name="infoName">
-						</div>
-						<div class="col-md-7">
-							<input type="text" class="form-control" placeholder="value" name="infoValue">
-						</div>
-						<div class="col-md-1">
-							<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
-								<i class="fas fa-times"></i>
-							</button>
-						</div>
+	if($('input[name="id"]').val()) {
+		$("button[type='submit']").prop("disabled", false)
+	}
+	$('.add-more').click(function(e) {
+		e.preventDefault();
+		$('#information div.add').append(
+			`<div class="row mb-3">
+					<div class="col-md-4">
+						<input type="text" class="form-control" placeholder="info" name="infoName">
 					</div>
-			`).children(':last').hide().fadeIn();;
-		});
-	})
+					<div class="col-md-7">
+						<input type="text" class="form-control" placeholder="value" name="infoValue">
+					</div>
+					<div class="col-md-1">
+						<button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+							<i class="fas fa-times"></i>
+						</button>
+					</div>
+				</div>
+		`).children(':last').hide().fadeIn();;
+	});
+
 	function closeInfo(obj) {
 		$(obj).parent().parent().fadeOut(350, function() {
 			$(this).remove();
 		});
 	}
-	$('#myDropzone').sortable({
- 	  update: function( event, ui ) {
-			let value = '';
-			$('.dz-filename span').each((index,element) => {
-				value += $(element).data('filename') + ','
+
+	function setValueImagesHidden(arrElement = ['.dz-filename span','.showImage img']) {
+		let value = '';
+		arrElement.forEach(element => {
+			$(element).each((index,elm) => {
+				console.log(index,elm)
+				value += $(elm).data('filename') + ','
 			})
 			if(value) {
-				$("input[name='imagesMulti']").val(value.substr(0,value.length - 1))
+				$("input[name='images']").val(value.substr(0,value.length - 1))
 			}
+		})
+	}
+	$('#myDropzone').sortable({
+ 	  update: function( event, ui ) {
+			setValueImagesHidden()
 		}
 	});
 
@@ -256,14 +264,19 @@
 						$(element).attr('data-filename',res.filename);
 					}
 				});
-				let value = '';
-				$('.dz-filename span').each((index,element) => {
-					value += $(element).data('filename') + ','
-				})
-				if(value) {
-					$("input[name='imagesMulti']").val(value.substr(0,value.length - 1))
-				}
+				setValueImagesHidden()
 			})
 		}
 	});
+
+	let $gallery = $('.showImage');
+	let $trash = $( "#trash" );
+
+	$('.showImage,#trash').sortable({
+		connectWith: ".connectedSort",
+		update: function( event, ui ) {
+			setValueImagesHidden()
+		},
+	});
+
 </script>

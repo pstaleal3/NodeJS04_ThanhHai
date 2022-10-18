@@ -1,0 +1,40 @@
+<% 
+  create = (information) => {
+    let xhtml = '';
+    if(information) {
+      information.forEach(value => {
+        xhtml += `<div class="row mb-3">
+                    <div class="col-md-4">
+                      <input type="text" value="${value.name}" class="form-control" placeholder="info" name="infoName">
+                    </div>
+                    <div class="col-md-7">
+                      <input type="text" value="${value.value}" class="form-control" placeholder="value" name="infoValue">
+                    </div>
+                    <div class="col-md-1">
+                      <button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  </div>`;
+      })
+    } else {
+      for (let i = 0; i < 3; i++) {
+        xhtml += `<div class="row mb-3">
+          <div class="col-md-4">
+            <input type="text" value="" class="form-control" placeholder="info" name="infoName">
+          </div>
+          <div class="col-md-7">
+            <input type="text" value="" class="form-control" placeholder="value" name="infoValue">
+          </div>
+          <div class="col-md-1">
+            <button type="button" class="btn btn-danger" onClick="closeInfo(this)">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        </div>`;
+      }
+    }
+    
+    return xhtml;
+  }
+%>

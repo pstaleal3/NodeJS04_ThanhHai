@@ -119,6 +119,20 @@ const mappingAttributes = (item) => {
 	else return JSON.stringify(result);
 }
 
+const mappingInfomation = (item) => {
+	let info = item.infoName.map((value,index) => {
+		if(value && item.infoValue[index]) {
+			let obj = {};
+			obj['name'] = value;
+			obj['value'] = item.infoValue[index];
+			return obj;
+		}
+	});
+	let result = info.filter(x => x);
+	if(result.length == 0) return null;
+	else return JSON.stringify(result);
+}
+
 module.exports = {
     createFilterStatus: createFilterStatus,
 		firstLetterUppercase,
@@ -126,5 +140,6 @@ module.exports = {
 		getCategory,
 		getRss,
 		mapRssPagination,
-		mappingAttributes
+		mappingAttributes,
+		mappingInfomation
 }

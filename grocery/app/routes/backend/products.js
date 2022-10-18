@@ -121,7 +121,7 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 	let listCategory = await UtilsHelpers.getCategory();
 	let listAttributes = await attributeModel.find({status: 'active'}).select('name id');
 	if(id === '') { // ADD
-		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item : {}, errors,listCategory,listAttributes});
+		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item : {attributes: ''}, errors,listCategory,listAttributes});
 	}else { // EDIT
 		Model.findById(id).then((item) => {
 			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors,listCategory,listAttributes});
@@ -136,42 +136,36 @@ router.post('/save',uploadImage,
 	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
 	// body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
 	// body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-
-
 	async (req, res, next) => {
-		res.send(req.body)
-		return;
+
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			let errorsMsg = {};
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
-			req.body.thumbnail = req.body.image_old;
+			let item = req.body;
+			item.information = UtilsHelpers.mappingInfomation(item);
 			let listCategory = await UtilsHelpers.getCategory();
+			let listAttributes = await attributeModel.find({status: 'active'}).select('name id');
+
 			res.render(`${folderView}form`, { 
 				pageTitle: pageTitleEdit, 
-				item: req.body,
+				item,
 				errors: errorsMsg,
-				listCategory
+				listCategory,
+				listAttributes
 			});
 			return;
 		} 
 
 		let item = req.body;
+		item.information = UtilsHelpers.mappingInfomation(item);
 		if(item.id){	// edit	
-			if(!req.file){ // không có upload lại hình
-				item.thumbnail = item.image_old;
-			}else{
-				item.thumbnail = req.file.filename;
-				FileHelpers.remove(`public/uploads/${Collection}/`, item.image_old);
-			}
-			
 			Model.updateOne(item).then(() => {
 				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 			});
 		} else { // add
-			item.thumbnail = req.file.filename;
 			Model.addOne(item).then(()=> {
 				req.flash('success', notify.ADD_SUCCESS, linkIndex);
 			})
@@ -181,7 +175,7 @@ router.post('/save',uploadImage,
 });
 router.post('/upload',uploadImage, async (req, res, next) => { 
 	if(!req.file) {
-		return res.status(422).send('The error message');
+		return res.status(422).send('File không hợp lệ');
 	} else {
 		return res.status(200).send(req.file);
 	}	

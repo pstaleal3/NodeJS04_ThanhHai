@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const databaseConfig = require(__path_configs + 'database');
 
 var schema = new mongoose.Schema({ 
-    title: String, 
+    name: String, 
     slug: String, 
     thumbnail: String, 
     description: String,
@@ -12,7 +12,7 @@ var schema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId, 
         ref: databaseConfig.col_categories 
     },
-    info: String,
+    information: String,
     attributes: String,
     images: String
 },{ timestamps: true });
