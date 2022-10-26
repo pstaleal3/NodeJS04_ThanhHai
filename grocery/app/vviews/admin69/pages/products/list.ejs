@@ -77,18 +77,20 @@
 							<%- sortField(linkPrefix,'Categories','categories',sort) %>
 						</th>
 						<!-- <th class="text-center">Image</th> -->
+						<th class="text-center">Price</a></th>
 						<th class="text-center">Status</a></th>
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
 						</th>
-						<th class="text-center">Created</a></th>
+						<!-- <th class="text-center">Created</a></th> -->
 						<!-- <th class="text-center">Modified</a></th> -->
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
 				<tbody>
 					
-					<% items.forEach( (item, index) => { %>
+					<% items.forEach( (item, index) => { 
+						let percent = 1 - (item.priceDiscount / item.priceOrigin) %>
 					<tr>
 						<td class="text-center">
 							<div class="custom-control custom-checkbox">
@@ -101,6 +103,12 @@
 						<td class="text-center"><%- highlightHelper(item.name, keyword) %></td>
 						<td class="text-center position-relative"><%- selectCategory(listCategory,item.categoriesId,'list',null,linkAjax,item.id) %></td>
 						<!-- <td class="text-center"><%# imageHelper(folderUpload, item.thumbnail, item.slug); %></td> -->
+						<td class="text-center">
+							<small class="text-danger mr-1">
+								<i class="fas fa-arrow-down"></i><%= percent * 100 %>%
+							</small>
+							<%= item.priceDiscount.toLocaleString() %>
+						</td>
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
 						</td>
@@ -113,9 +121,9 @@
 								this
 								)">
 						</td>
-						<td class="text-center">
+						<!-- <td class="text-center">
 							<%- showUserTimeInfo(item.createdAt) %>
-						</td>
+						</td> -->
 						<!-- <td class="text-center">
 							<%# showUserTimeInfo(item.updatedAt) %>
 						</td> -->

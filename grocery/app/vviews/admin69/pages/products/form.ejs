@@ -61,6 +61,16 @@
 								<%- `<span class="error invalid-feedback">${errors.ordering}</span>` %>
 							</div>
 							<div class="form-group">
+								<label>Price Origin</label>
+								<input type="number" name="priceOrigin" value="<%= item.priceOrigin ?? 0 %>" class="form-control form-control-sm <%= errors.priceOrigin && 'is-invalid' %>">
+								<%- `<span class="error invalid-feedback">${errors.priceOrigin}</span>` %>
+							</div>
+							<div class="form-group">
+								<label>Price Discount</label>
+								<input type="number" name="priceDiscount" value="<%= item.priceDiscount ?? 0 %>" class="form-control form-control-sm <%= errors.priceDiscount && 'is-invalid' %>">
+								<%- `<span class="error invalid-feedback">${errors.priceDiscount}</span>` %>
+							</div>
+							<div class="form-group">
 								<label>Status</label>
 								<select id="form[status]" name="status" class="custom-select custom-select-sm <%= errors.status && 'is-invalid' %>">
 									<option value="novalue">Choose Status</option>
@@ -99,7 +109,7 @@
 						<div class="card-body">
 							<div class="row">
 								<div class="form-group">
-									<% listAttributes.forEach(value => { %>
+									<% listAttributes.map(value => { %>
 										<div class="custom-control custom-checkbox">
 											<input class="custom-control-input" name="attributes" type="checkbox" id="<%= value.id %>" value="<%= value.id %>" <%= item.attributes.includes(value.id) ? 'checked' : '' %> >
 											<label for="<%= value.id %>" class="custom-control-label"><%= value.name %></label>
@@ -162,8 +172,8 @@
 					<input name="image_old" value="<%= item.thumbnail %>" type="hidden" />
 					<input name="image_uploaded" value="" type="hidden" id="image_uploaded" />
 					<input name="images" value="<%= item.images %>" type="hidden" />
-					<button type="button" name="saveImages" class="btn btn-sm btn-success mr-1" disabled> Save Images</button>
-					<button type="submit" class="btn btn-sm btn-success mr-1" disabled> Submit</button>
+					<input name="deleteImages" value type="hidden">
+					<button type="submit" class="btn btn-sm btn-success mr-1"> Submit</button>
 					<a href="<%= linkPrefix %>" class="btn btn-sm btn-danger mr-1"> Cancel</a>
 				</div>
 			</div>
@@ -225,7 +235,6 @@
 		let value = '';
 		arrElement.forEach(element => {
 			$(element).each((index,elm) => {
-				console.log(index,elm)
 				value += $(elm).data('filename') + ','
 			})
 			if(value) {
@@ -242,21 +251,12 @@
 	let myDropzone = new Dropzone("#myDropzone", { 
 		url: $("#myDropzone").data('url'),
 		paramName: 'fileMulti',
-		autoProcessQueue:false,
+		autoProcessQueue:true,
 		addRemoveLinks: true,
   	maxFiles:10,
 		parallelUploads:10,
 		init: function() {
 			var myDropzone = this;
-				$("button[name='saveImages']").click((e) => {
-					$("button[name='saveImages']").prop("disabled", true)
-					$("button[type='submit']").prop("disabled", false)
-					myDropzone.processQueue();
-			});
-			myDropzone.on("addedfile", file => {
-				$("button[name='saveImages']").prop("disabled", false)
-				$("button[type='submit']").prop("disabled", true)
-			});
 			myDropzone.on("success",(file, res) => {
 				$('.dz-filename span').each((index,element) => {
 					let fileName = $(element).text();
@@ -269,14 +269,19 @@
 		}
 	});
 
-	let $gallery = $('.showImage');
-	let $trash = $( "#trash" );
 
 	$('.showImage,#trash').sortable({
 		connectWith: ".connectedSort",
 		update: function( event, ui ) {
 			setValueImagesHidden()
 		},
+		remove: function(event,ui) {
+			let fileName = '';
+			$('#trash img').each((index,elm) => {
+				fileName += $(elm).data('filename') + ',';
+			})
+			$('input[name="deleteImages"]').val(fileName.substr(0,fileName.length - 1))
+		}
 	});
 
 </script>

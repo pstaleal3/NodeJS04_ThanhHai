@@ -4,6 +4,8 @@ const util = require('util');
 const { body, validationResult } = require('express-validator');
 var slug = require('slug');
 
+const removeTrashImages =  require(__path_middleware + 'removeTrashImages');
+
 const Collection = 'products';
 const systemConfig  = require(__path_configs + 'system');
 const notify  		= require(__path_configs + 'notify');
@@ -20,9 +22,9 @@ const pageTitleAdd   = pageTitleIndex + ' - Add';
 const pageTitleEdit  = pageTitleIndex + ' - Edit';
 const folderView	 = __path_view_admin + `pages/${Collection}/`;
 const uploadImage	 = FileHelpers.upload('fileMulti', Collection);
-
+let trashImages = [];
 // List items
-router.get('(/status/:status)?', async (req, res, next) => {
+router.get('(/status/:status)?',removeTrashImages ,async (req, res, next) => {
 	let objWhere	 = {};
 	let keyword		 = ParamsHelpers.getParam(req.query, 'keyword', '');
 	let currentStatus= ParamsHelpers.getParam(req.params, 'status', 'all'); 
@@ -99,10 +101,8 @@ router.get('/sort/:field/:type', (req, res, next) => {
 
 // Delete
 router.get('/delete/:id', (req, res, next) => {
-	let id				= ParamsHelpers.getParam(req.params, 'id', ''); 	
-	
-	
-	Model.deleteOne(id,'thumbnail').then((result, err) => {
+	let id	= ParamsHelpers.getParam(req.params, 'id', ''); 	
+	Model.deleteOne(id,'images').then((result, err) => {
 		req.flash('success', notify.DELETE_SUCCESS, linkIndex);
 	});
 });
@@ -124,6 +124,7 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 		res.render(`${folderView}form`, { pageTitle: pageTitleAdd, item : {attributes: ''}, errors,listCategory,listAttributes});
 	}else { // EDIT
 		Model.findById(id).then((item) => {
+			item.attributes = item.attributes ?? '';
 			res.render(`${folderView}form`, { pageTitle: pageTitleEdit, item, errors,listCategory,listAttributes});
 		})
 	}
@@ -131,20 +132,31 @@ router.get(('/form(/:id)?'),async (req, res, next) => {
 
 // SAVE = ADD EDIT
 router.post('/save',uploadImage,
-	// body('name').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
-	// body('categoriesId').not().isIn(['novalue']).withMessage(notify.ERROR_Category),
-	// body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
-	// body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
-	// body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
-	async (req, res, next) => {
+	body('name').notEmpty().withMessage(notify.ERROR_TITLE_EMPTY),
+	body('slug').matches(/^[a-z0-9]+(?:-[a-z0-9]+)*$/).withMessage(notify.ERROR_SLUG),
+	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
+	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
+	body('priceOrigin').isInt({min:0}).withMessage(notify.ERROR_PRICE),
+	body('priceDiscount').isInt({min:0}).withMessage(notify.ERROR_PRICE).bail()
+	.custom((value,{req}) => {
+		const {priceOrigin} = req.body;
+		if(+value > +priceOrigin) {
+			
+			return Promise.reject(notify.ERROR_PRICE_DISCOUNT);
+		}
+		return true;
+	}),
 
+	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
 			let errorsMsg = {};
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
+		
 			let item = req.body;
+			item.attributes = item.attributes ?? '';
 			item.information = UtilsHelpers.mappingInfomation(item);
 			let listCategory = await UtilsHelpers.getCategory();
 			let listAttributes = await attributeModel.find({status: 'active'}).select('name id');
@@ -158,18 +170,21 @@ router.post('/save',uploadImage,
 			});
 			return;
 		} 
-
 		let item = req.body;
 		item.information = UtilsHelpers.mappingInfomation(item);
+		req.session.images = null;
+		trashImages = [];
 		if(item.id){	// edit	
 			Model.updateOne(item).then(() => {
+				if(item.deleteImages) {
+					UtilsHelpers.deleteImagesDropzone(Collection,item.deleteImages)
+				}
 				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 			});
 		} else { // add
 			Model.addOne(item).then(()=> {
 				req.flash('success', notify.ADD_SUCCESS, linkIndex);
 			})
-			
 		}	
 	// });
 });
@@ -177,6 +192,8 @@ router.post('/upload',uploadImage, async (req, res, next) => {
 	if(!req.file) {
 		return res.status(422).send('File không hợp lệ');
 	} else {
+		trashImages.push(req.file.filename)
+		req.session.images = trashImages;
 		return res.status(200).send(req.file);
 	}	
 });

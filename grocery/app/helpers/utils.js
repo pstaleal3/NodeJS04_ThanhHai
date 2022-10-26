@@ -3,6 +3,7 @@ let Parser = require('rss-parser');
 let parser = new Parser();
 let xml2js = require('xml2js');
 let fs = require('fs');
+const FileHelpers = require(__path_helpers + 'file');
 
 let createFilterStatus =  async (currentStatus,collection) => {
 	const Model = require(__path_schemas +  collection);
@@ -132,6 +133,14 @@ const mappingInfomation = (item) => {
 	if(result.length == 0) return null;
 	else return JSON.stringify(result);
 }
+const deleteImagesDropzone = (Collection, images) => {
+		if(images) {
+			let fileNames = images.split(',');
+			fileNames.map(item => {
+				FileHelpers.remove(`public/uploads/${Collection}/`, item);
+			})
+		}
+}
 
 module.exports = {
     createFilterStatus: createFilterStatus,
@@ -141,5 +150,6 @@ module.exports = {
 		getRss,
 		mapRssPagination,
 		mappingAttributes,
-		mappingInfomation
+		mappingInfomation,
+		deleteImagesDropzone
 }

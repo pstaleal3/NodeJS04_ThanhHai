@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+
 const middleAuthentication = require(__path_middleware + 'auth');
 
 router.use('/' ,require('./dashboard'));

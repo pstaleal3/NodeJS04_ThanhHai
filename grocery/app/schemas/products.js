@@ -14,7 +14,9 @@ var schema = new mongoose.Schema({
     },
     information: String,
     attributes: String,
-    images: String
+    images: String,
+    priceOrigin: Number,
+    priceDiscount: Number
 },{ timestamps: true });
 
 module.exports = mongoose.model(databaseConfig.col_products, schema );

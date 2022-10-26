@@ -1,6 +1,7 @@
 const Collection = 'products';
 const Model = require(__path_schemas + Collection);
 const FileHelpers = require(__path_helpers + 'file');
+const utils = require(__path_helpers + 'utils');
 const CategoriesModel = require(__path_schemas + 'categories');
 module.exports = {
 	getList(objWhere, pagination, {sortField, sortType}) {
@@ -26,9 +27,9 @@ module.exports = {
 	},
 	deleteOne(id,field = null){
 		if(field) {
-			return Model.findById(id).select(field).then(data => {
-				FileHelpers.remove(`public/uploads/${Collection}/`, data[field]);
-			}).then(() => Model.deleteOne({_id: id}));
+			return Model.findById(id).select('images').then(data => {
+				utils.deleteImagesDropzone(Collection,data.images);
+			}).then(() => Model.deleteOne({_id: id}))
 		} else {
 			return Model.deleteOne({_id: id});
 		}

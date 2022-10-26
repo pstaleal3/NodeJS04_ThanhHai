@@ -22,4 +22,6 @@ module.exports = {
     ERROR_LOGIN_USERNAME_NOTEXIST: 'Username không tồn tại',
     ERROR_LOGIN_PASSWORD_INCORRECT: 'Password không chính xác',
     ERROR_LOGIN: 'Thông tin đăng nhập không chính xác',
+    ERROR_PRICE: 'Giá tiền phải là số nguyên',
+    ERROR_PRICE_DISCOUNT: 'Discount phải nhỏ hơn giá gốc',
 };
