@@ -24,4 +24,6 @@ module.exports = {
     ERROR_LOGIN: 'Thông tin đăng nhập không chính xác',
     ERROR_PRICE: 'Giá tiền phải là số nguyên',
     ERROR_PRICE_DISCOUNT: 'Discount phải nhỏ hơn giá gốc',
+    ERROR_IMG_EMPTY: 'Vui lòng upload hình',
+    ERROR_IMG_LIMIT: 'Số lượng hình từ 2 trở lên ',
 };

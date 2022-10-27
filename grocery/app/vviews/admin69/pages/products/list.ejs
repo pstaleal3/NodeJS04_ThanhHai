@@ -7,6 +7,7 @@
 <% include ./../../helpers/sortField %>
 <% include ./../../helpers/image %>
 <% include ./../../helpers/selectCategory %>
+<% include ./../../helpers/filterCategory %>
 <% include ./../../helpers/getStringLength %>
 <% 
 	const collection = "products";
@@ -28,8 +29,8 @@
 		<div class="row justify-content-between">
 			<div class="mb-1">
 				<%- filterStatusHelper(collection, statusFilter, keyword) %>	 
+				<%- filterCategory(listCategory, linkPrefix + 'filter', categoryId) %>	 
 			</div>
-			
 			<div class="mb-1">
 				<form action="<%= linkPrefix %>status/<%= currentStatus %>" method="GET">
 					<div class="input-group">
@@ -57,7 +58,7 @@
 		<!-- Control -->
 		<form action="" method="post" class="table-responsive" id="zt-form">
 			<%- actionHelper(collection) %>
-
+			
 			<!-- List Content -->
 		
 			<table class="table table-bordered table-hover text-nowrap btn-table mb-0">
@@ -76,9 +77,11 @@
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Categories','categories',sort) %>
 						</th>
-						<!-- <th class="text-center">Image</th> -->
-						<th class="text-center">Price</a></th>
-						<th class="text-center">Status</a></th>
+						<th class="text-center">Image</th>
+						<th class="text-center sort">
+							<%- sortField(linkPrefix,'Price','priceDiscount',sort) %>
+						</th>
+						<th class="text-center">Status</th>
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
 						</th>
@@ -90,7 +93,9 @@
 				<tbody>
 					
 					<% items.forEach( (item, index) => { 
-						let percent = 1 - (item.priceDiscount / item.priceOrigin) %>
+						let percent = 1 - (item.priceDiscount / item.priceOrigin) 
+						let image = item.images.split(',')[0];	
+					%>
 					<tr>
 						<td class="text-center">
 							<div class="custom-control custom-checkbox">
@@ -102,12 +107,14 @@
 						<td class="text-center"><%= index+1 %></td>
 						<td class="text-center"><%- highlightHelper(item.name, keyword) %></td>
 						<td class="text-center position-relative"><%- selectCategory(listCategory,item.categoriesId,'list',null,linkAjax,item.id) %></td>
-						<!-- <td class="text-center"><%# imageHelper(folderUpload, item.thumbnail, item.slug); %></td> -->
+						<td class="text-center"><%- imageHelper(folderUpload, image, item.slug); %></td>
 						<td class="text-center">
+							<% if(percent != 0){ %>
 							<small class="text-danger mr-1">
-								<i class="fas fa-arrow-down"></i><%= percent * 100 %>%
+								<i class="fas fa-arrow-down"></i><%= Math.round(percent * 100) %>%
 							</small>
-							<%= item.priceDiscount.toLocaleString() %>
+							<% } %>
+							<%= item.priceDiscount.toLocaleString() %>đ
 						</td>
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
@@ -168,3 +175,12 @@
     </div>
   </div>
 </div>
+
+<script>
+	function filterCategory(obj,link) {
+			window.location.href = link + '/' + obj.value;
+	}
+	function discount(obj,link) {
+		window.location.href = link + '/discount/' + obj.value;
+	}
+</script>

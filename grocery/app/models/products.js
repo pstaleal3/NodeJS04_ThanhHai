@@ -40,5 +40,15 @@ module.exports = {
 	},
 	findById(id) {
 		return Model.findById(id);
+	},
+	discount(value) {
+		return Model.find({}).select('priceOrigin').then(price => {
+			price.map(async item => {
+				await Model.updateOne(
+					{priceOrigin: item.priceOrigin},
+					{priceDiscount: item.priceOrigin - (item.priceOrigin * value) / 100}
+				)
+			})
+		});
 	}
 }

@@ -15,13 +15,21 @@
             xhtmlAction += `<option value="${link}">${action.name}</option>`;
         });
 
+
+        let xhtmlDiscount = `<select class="custom-select" style="width:auto" onchange="discount(this,'${systemConfig.prefixAdmin + '/' + collection}')">
+                            <option value="0">Discount</option>`;
+        for (let i = 0; i <= 99; i++) {
+            xhtmlDiscount += `<option value="${i}">${i}%</option>`
+        }
+        xhtmlDiscount += `</select>`;
+
         return `<div class="d-flex flex-wrap align-items-center justify-content-between mb-2">
                     <div class="mb-1">
                         <select name="slbAction" class="slbAction custom-select custom-select-sm mr-1 " style="width: unset">
-                            
                             ${xhtmlAction}
                         </select> 
                         <button id="btn-action" value="btnAction" disabled class="btnAction btn btn-sm btn-info">Apply <span class="badge badge-pill badge-danger navbar-badge" style="display: none"></span></button>
+                            ${xhtmlDiscount}
                     </div>
                     <a href="${linkAddNew}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Add New</a>
                 </div>`;

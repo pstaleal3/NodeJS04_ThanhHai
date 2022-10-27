@@ -30,6 +30,7 @@ router.get('(/status/:status)?',removeTrashImages ,async (req, res, next) => {
 	let currentStatus= ParamsHelpers.getParam(req.params, 'status', 'all'); 
 	let statusFilter = await UtilsHelpers.createFilterStatus(currentStatus,Collection);
 	let sort = req.session;
+	let categoryId = req.session.categoryId ?? null;
 	let listCategory = await UtilsHelpers.getCategory();
 	let pagination 	 = {
 		totalItems		 : 1,
@@ -38,6 +39,7 @@ router.get('(/status/:status)?',removeTrashImages ,async (req, res, next) => {
 		pageRanges		 : 3
 	};
 
+	if(categoryId && categoryId != 'all') objWhere.categoriesId = categoryId;
 	if(currentStatus !== 'all') objWhere.status = currentStatus;
 	if(keyword !== '') objWhere.name = new RegExp(keyword, 'i');
 	pagination.totalItems = await Model.countRow(objWhere);
@@ -53,7 +55,8 @@ router.get('(/status/:status)?',removeTrashImages ,async (req, res, next) => {
 				currentStatus,
 				keyword,
 				sort,
-				listCategory
+				listCategory,
+				categoryId
 			});
 		});
 });
@@ -81,6 +84,17 @@ router.get('/sort/:field/:type', (req, res, next) => {
 	req.session.sortField = req.params.field;
 	req.session.sortType = req.params.type;
 	res.redirect(linkIndex)
+});
+// filter
+router.get('/filter/:categoryId', (req, res, next) => {
+	req.session.categoryId = req.params.categoryId;
+	res.redirect(linkIndex)
+});
+//discount
+router.get('/discount/:value', (req, res, next) => {
+	Model.discount(req.params.value).then((data) => {
+		res.redirect(linkIndex)
+	})
 });
 // Change ordering - Multi
 // router.post('/change-ordering', (req, res, next) => {
@@ -141,12 +155,18 @@ router.post('/save',uploadImage,
 	.custom((value,{req}) => {
 		const {priceOrigin} = req.body;
 		if(+value > +priceOrigin) {
-			
 			return Promise.reject(notify.ERROR_PRICE_DISCOUNT);
 		}
 		return true;
 	}),
-
+	body('images').notEmpty().withMessage(notify.ERROR_IMG_EMPTY).bail()
+	.custom((value,{req}) => {
+		const {priceOrigin} = req.body;
+		if (value && value.split(',').length <= 1) {
+			return Promise.reject(notify.ERROR_IMG_LIMIT);
+		}
+		return true;
+	}),
 	async (req, res, next) => {
 		const errors = validationResult(req);
 		if (!errors.isEmpty()) {
@@ -154,7 +174,7 @@ router.post('/save',uploadImage,
 			errors.errors.forEach(value => {
 				errorsMsg[value.param] = value.msg
 			});
-		
+			console.log(errorsMsg)
 			let item = req.body;
 			item.attributes = item.attributes ?? '';
 			item.information = UtilsHelpers.mappingInfomation(item);
