@@ -13,4 +13,5 @@ router.use('/menu', require('./menu'));
 router.use('/settings', require('./settings'));
 router.use('/products', require('./products'));
 router.use('/attributes', require('./attributes'));
+router.use('/coupons', require('./coupons'));
 module.exports = router;

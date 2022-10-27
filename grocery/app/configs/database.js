@@ -12,5 +12,6 @@ module.exports = {
     col_rss: 'rss',
     col_settings: 'settings',
     col_products: 'products',
-    col_attributes: 'attributes'
+    col_attributes: 'attributes',
+    col_coupons: 'coupons',
 };
