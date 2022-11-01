@@ -3,12 +3,12 @@ const databaseConfig = require(__path_configs + 'database');
 
 var schema = new mongoose.Schema({ 
     name: String, 
-    value: Number,
+    values: Number,
     quantity: Number,
     used: Number,
-    from: Date,
-    to: Date,
+    dates: String,
     status: String,
+    type: String
     
 },{ timestamps: true });
 

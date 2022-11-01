@@ -126,16 +126,35 @@ router.get(('/form(/:id)?'), (req, res, next) => {
 
 // SAVE = ADD EDIT
 router.post('/save',uploadAvatar,
-	body('name').isLength({ min: 1 ,max:20}).withMessage(util.format(notify.ERROR_NAME,1,20)),
-	body('ordering').isNumeric().withMessage(notify.ERROR_ORDERING),
+	body('name').isLength({ min: 10 }).withMessage('Name toi thieu 10 ky tu'),
+	body('quantity').isInt({min: 1}).withMessage('Quantity phai la so nguyen lon hon 0'),
 	body('status').not().isIn(['novalue']).withMessage(notify.ERROR_STATUS),
+	body('values').isInt({min:1}).withMessage('Value phai la so nguyen lon hon 0').custom((value,{req}) => {
+		const {type} = req.body;
+		if(type == 'percent' && (value > 100 || value < 0)) {
+			return Promise.reject('Value phai lon hon 0 va nho hon 100');
+		}
+		return true;
+	}),
 	(req, res, next) => {
 		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			let errorsMsg = {};
+			errors.errors.forEach(value => {
+				errorsMsg[value.param] = value.msg
+			});
+			let item = req.body
+			res.render(`${folderView}form`, { 
+				pageTitle: pageTitleEdit, 
+				item,
+				errors: errorsMsg
+			});
+			return;
+		} 
 		let item = req.body;
-		item.attribute = UtilsHelpers.mappingAttributes(item);
-
 		if(item.id){	// edit	
-			Model.updateOne(item).then(() => {
+			console.log(item)
+			Model.updateOne(item).then((data) => {
 				req.flash('success', notify.EDIT_SUCCESS, linkIndex);
 			});
 		} else { // add

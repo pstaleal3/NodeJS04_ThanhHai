@@ -29,7 +29,7 @@
                             ${xhtmlAction}
                         </select> 
                         <button id="btn-action" value="btnAction" disabled class="btnAction btn btn-sm btn-info">Apply <span class="badge badge-pill badge-danger navbar-badge" style="display: none"></span></button>
-                            ${xhtmlDiscount}
+                            ${collection == 'products' ? xhtmlDiscount : '' }
                     </div>
                     <a href="${linkAddNew}" class="btn btn-sm btn-info"><i class="fas fa-plus"></i> Add New</a>
                 </div>`;

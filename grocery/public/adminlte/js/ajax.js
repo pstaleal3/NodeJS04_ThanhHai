@@ -24,6 +24,14 @@ const handleAjax = (link,field,id,evt) => {
             return;
          } 
          break;
+      case 'quantity':
+         value = evt.value;
+         if(isNaN(value)) {
+            evt.value = evt.value.replace(/[^0-9]/g,'');
+            ntf(evt,'Please Insert Number','error')
+            return;
+         } 
+         break;
       case 'link':
          value = evt.value;
          var pattern = new RegExp(

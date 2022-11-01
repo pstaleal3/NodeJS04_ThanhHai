@@ -70,12 +70,17 @@
 						<th class="text-center sort">
 							<%- sortField(linkPrefix,'Name','name',sort) %>
 						</th>
+						<th class="text-center sort">
+							<%- sortField(linkPrefix,'Values','values',sort) %>
+						</th>
 						<th class="text-center">Status</a></th>
 						<th class="text-center sort">
-							<%- sortField(linkPrefix,'Ordering','ordering',sort) %>
+							<%- sortField(linkPrefix,'Quantity','quantity',sort) %>
 						</th>
-						<th class="text-center">Created</a></th>
-						<th class="text-center">Modified</a></th>
+						<th class="text-center sort">
+							<%- sortField(linkPrefix,'Used','used',sort) %>
+						</th>
+						<th class="text-center">Range</th>
 						<th class="text-center">Action</th>
 					</tr>
 				</thead>
@@ -92,23 +97,21 @@
 						</td>
 						<td class="text-center"><%= index+1 %></td>
 						<td class="text-center"><%- highlightHelper(item.name, keyword) %></td>
+						<td class="text-center"><%= item.values %><%= item.type === 'percent' ? '%' : 'đ' %></td>
 						<td class="text-center position-relative" id="<%= item.id %>-status">
 							<%- statusHelper(collection, item.status, item.id) %>
 						</td>
-						
 						<td class="text-center position-relative">
-							<input type="number" value="<%= item.ordering %>" class="text-center ordering" onChange="handleAjax(
+							<input type="number" value="<%= item.quantity %>" class="text-center ordering" onChange="handleAjax(
 								'<%= linkAjax %>',
-								'ordering',
+								'quantity',
 								'<%= item.id %>',
 								this
 								)">
 						</td>
+						<td class="text-center"><%= item.used %></td>
 						<td class="text-center">
-							<%- showUserTimeInfo(item.createdAt) %>
-						</td>
-						<td class="text-center">
-							<%- showUserTimeInfo(item.updatedAt) %>
+							<input type="text" class="form-control float-right" id="reservation" name="dates" value="<%= item.dates ?? null %>" disabled>
 						</td>
 						<td class="text-center">
 							<a href="<%= linkPrefix %>form/<%= item.id %>" class="rounded-circle btn btn-sm btn-info" title="Edit">
